@@ -27,13 +27,13 @@
 <body onload="initGame()">
     <h1>El pollo Loco</h1>
 
-    <div class="game-container">
+    <div onclick="enterfullScreen()" id="fullscreen" class="game-container">
         <canvas id="gameCanvas" width="720" height="480"></canvas>
         <button id="startButton" class="start-button" type="button" aria-label="Spiel starten">
             <img src="img/9_intro_outro_screens/start/startscreen_1.png" alt="El Pollo Loco – Spiel starten">
         </button>
     </div>
 
-    <div class="description"><h2>Beschreibung</h2><p>Hier kommt die Beschreibung des Spiels hin.</p></div>
+    <div class="description"><h2>Beschreibung</h2><p>Hier kommt die Beschreibung des Spiels hin.</p><button type="button" onclick="enterfullScreen()">Vollbild</button></div>
 </body>
 </html>

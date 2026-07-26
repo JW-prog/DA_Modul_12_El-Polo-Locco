@@ -2,7 +2,7 @@
 
          percentage = 100;
          x = 500;
-         y = 0;
+         y = 10;
          width = 200;
          height = 60;
 

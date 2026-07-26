@@ -66,7 +66,7 @@ class Character extends MovableObject {
                 this.otherDirection = false; // Character is facing right
                
             }
-            if (this.world.keyboard.LEFT && this.x > 110) {
+            if (this.world.keyboard.LEFT && this.x > 120) {
                 this.moveLeft(); // Prevent moving left beyond the canvas
                 this.x -= this.speed;
                 this.otherDirection = true; // Character is facing left

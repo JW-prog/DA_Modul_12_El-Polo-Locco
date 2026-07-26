@@ -120,5 +120,21 @@ class World {
     }
 
 }
+
+
+function enterfullScreen() {
+    let element = document.getElementById('fullscreen');
+    enterFullscreen(element);
+}
+
+function enterFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) { /* Firefox */
+        element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        element.webkitRequestFullscreen();
+    }
+}
     
 
