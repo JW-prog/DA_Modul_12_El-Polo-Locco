@@ -3,10 +3,16 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
+function initGame() {
+    const startButton = document.getElementById('startButton');
+    startButton.addEventListener('click', startGame, { once: true });
+}
 
 function startGame() {
     canvas = document.getElementById('gameCanvas');
+    initLevel1();
     world = new World(canvas, keyboard);
+    document.getElementById('startButton').classList.add('is-hidden');
 
     console.log('My character is:', world.character);
   
