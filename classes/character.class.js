@@ -52,7 +52,6 @@ class Character extends MovableObject {
 
     
         this.applyGravity();
-        this.animate();
         this.x = 220 + Math.random() * 500; // Random x position between 200 and 700
     }
 
@@ -60,45 +59,56 @@ class Character extends MovableObject {
 
     animate() {
 
-     setInterval(() => {
-        if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX) {
-            this.moveRight(); // Prevent moving right beyond the level end
-            this.x += this.speed;
-            this.otherDirection = false; // Character is facing right
-           
-        }
-        if (this.world.keyboard.LEFT && this.x > 110) {
-            this.moveLeft(); // Prevent moving left beyond the canvas
-            this.x -= this.speed;
-            this.otherDirection = true; // Character is facing left
-        }
-
-        
-
-        if(this.world.keyboard.SPACE && !this.isAboveGround()) { // Jump only if character is on the ground
-           this.speedY = 30; // Set the vertical speed for jumping
-        }
-
-        this.world.camera_x = -this.x + 100; // Adjust camera position based on character's x position
-    }, 1000 / 60);
-
-      setInterval(() => {
-
-        if (this.isDead()) {
-            this.playAnimation(this.IMAGES_DEAD);
-        } else if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
-        } else if (this.isAboveGround()) {
-            this.playAnimation(this.IMAGES_JUMPING);
-        } else {
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING);
+        setInterval(() => {
+            if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX) {
+                this.moveRight(); // Prevent moving right beyond the level end
+                this.x += this.speed;
+                this.otherDirection = false; // Character is facing right
+               
             }
-        }
-    }, 50);
-}
+            if (this.world.keyboard.LEFT && this.x > 110) {
+                this.moveLeft(); // Prevent moving left beyond the canvas
+                this.x -= this.speed;
+                this.otherDirection = true; // Character is facing left
+            }
+
+            
+
+            if(this.world.keyboard.SPACE && !this.isAboveGround()) { // Jump only if character is on the ground
+               this.speedY = 30; // Set the vertical speed for jumping
+            }
+
+            this.world.camera_x = -this.x + 100; // Adjust camera position based on character's x position
+        }, 1000 / 60);
+
+        setInterval(() => {
+
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            } else if (this.isAboveGround()) {
+                this.playAnimation(this.IMAGES_JUMPING);
+            } else {
+                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                    this.playAnimation(this.IMAGES_WALKING);
+                }
+            }
+        }, 50);
+    }
 
     jump() {
       console.log('Character is jumping');
     }
+
+    gameOver() {
+    if (this.isDead() && !this.world.gameOver) {
+        this.playAnimation(this.IMAGES_DEAD);
+
+        setTimeout(() => {
+            this.world.gameOver = true;
+            console.log('Game over');
+        }, 1000);
+    }
+}
 }

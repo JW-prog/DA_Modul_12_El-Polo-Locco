@@ -28,10 +28,14 @@ window.addEventListener('keydown', (event) => {
     if (event.keyCode === 32) {
         keyboard.SPACE = true;
     }
+    if (event.keyCode === 68) {
+        keyboard.D = true;
+    }
     console.log(keyboard);
 });
 
 window.addEventListener('keyup', (event) => {
+    console.log('Key released:', event.keyCode);
     if (event.keyCode === 37) {
         keyboard.LEFT = false;
     }
@@ -46,6 +50,9 @@ window.addEventListener('keyup', (event) => {
     }
     if (event.keyCode === 32) {
         keyboard.SPACE = false;
+    }
+    if (event.keyCode === 68) {
+        keyboard.D = false;
     }
     console.log(keyboard);
 });

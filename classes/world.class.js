@@ -1,27 +1,46 @@
 
 class World { 
 
-    character = new Character();
+    character;
     level = level1;
     canvas;
     ctx;
     keyboard;
     camera_x = 0;
     statusBar = new StatusBar();
+    statusBarEnemy = new StatusBarEnemy();
+    gameOver = false;
+    throwableObjects = [];
+    canThrow = true;
 
     constructor(canvas, keyboard) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.keyboard = keyboard;
+        this.character = new Character();
+        this.character.world = this;
+        this.character.animate();
         this.draw();
-        this.setWorld();
         this.checkCollisions();
+        this.checkThrowObjects();
     }
 
     setWorld() {
         // Hier kannst du die Welt-Referenz an das Character-Objekt übergeben
         this.character.world = this;
     }
+
+    run() {
+        setInterval(() => {
+            this.character.move();
+            this.character.jump();
+            this.character.applyGravity();
+            this.camera_x = -this.character.x + 100;
+            this.checkCollisions();
+            this.checkThrowObjects();
+        }, 1000 / 60);
+    }
+
 
     checkCollisions() {
         setInterval(() => {
@@ -34,6 +53,20 @@ class World {
         }, 200);
     }
 
+    checkThrowObjects() {
+        setInterval(() => {
+            if (this.keyboard.D && this.canThrow) {
+                let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100, this.character.otherDirection);
+                this.throwableObjects.push(bottle);
+                this.canThrow = false;
+            }
+
+            if (!this.keyboard.D) {
+                this.canThrow = true;
+            }
+        }, 1000 / 60);
+    }
+
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -43,9 +76,11 @@ class World {
         this.addToMap(this.character);
         this.addObjectToMap(this.level.clouds);
         this.addObjectToMap(this.level.enemies);
+        this.addObjectToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0); // Kamera-Offset zurücksetzen
-
-        this.addToMap(this.statusBar); // StatusBar ohne Kamera-Offset zeichnen
+        this.addToMap(this.statusBar);
+        this.addToMap(this.statusBarEnemy);
+        
 
         let self = this;
         requestAnimationFrame(function() {
@@ -83,6 +118,7 @@ class World {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
+
 }
     
 

@@ -27,7 +27,7 @@ IMAGES = ['img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
         }
         
         resolveImageIndex() {
-            if (this.percentage == 100) {
+            if (this.percentage === 100) {
                 return 5;
             } else if (this.percentage >= 80) {
                 return 4;
@@ -42,5 +42,8 @@ IMAGES = ['img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
             }
         }
 
+        
 }
+
+
 
