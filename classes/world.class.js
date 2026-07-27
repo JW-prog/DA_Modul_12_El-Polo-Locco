@@ -42,7 +42,7 @@ class World {
             this.camera_x = -this.character.x + 100;
             this.checkCollisions();
             this.checkThrowObjects();
-        }, 1000 / 60);
+        }, 1000 / 50);
     }
 
 
