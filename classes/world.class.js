@@ -78,25 +78,27 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.translate(this.camera_x, 0); // Kamera-Offset anwenden
-        this.addObjectToMap(this.level.backgroundObjects);
-        this.addToMap(this.character);
-        this.addObjectToMap(this.level.clouds);
-        this.addObjectToMap(this.level.enemies);
-        this.addObjectToMap(this.throwableObjects);
-        this.ctx.translate(-this.camera_x, 0); // Kamera-Offset zurücksetzen
+        this.addObjectsToMap(this.level.backgroundObjects);
+        
+        this.addObjectsToMap(this.level.clouds);
+        this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarEnemy);
         this.addToMap(this.statusBarBottle);
         this.addToMap(this.statusBarCoin);
-        
-
+        this.ctx.translate(this.camera_x, 0);
+        this.addObjectsToMap(this.level.bottles);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.throwableObjects);
+        this.addToMap(this.character);
+        this.ctx.translate(-this.camera_x, 0); // Kamera-Offset zurücksetzen
         let self = this;
         requestAnimationFrame(function() {
             self.draw();
         });
     }
 
-    addObjectToMap(objects) {
+    addObjectsToMap(objects) {
         objects.forEach(obj => {
             this.addToMap(obj);
         });
