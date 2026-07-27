@@ -7,7 +7,7 @@ class StatusBarBottle extends DrawableObject {
     width = 200;
     height = 60;
 
-    IMAGES = [
+    IMAGES_BOTTLES = [
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
@@ -18,13 +18,13 @@ class StatusBarBottle extends DrawableObject {
 
   constructor() {
     super();
-    this.loadImages(this.IMAGES);
+    this.loadImages(this.IMAGES_BOTTLES);
     this.setPercentage(100);
   }
 
     setPercentage(percentage) {
         this.percentage = percentage;
-        let path = this.IMAGES[this.resolveImageIndex()];
+        let path = this.IMAGES_BOTTLES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
 
