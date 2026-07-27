@@ -22,6 +22,7 @@ class World {
         this.keyboard = keyboard;
         this.character = new Character();
         this.character.world = this;
+        this.level.enemies.forEach(enemy => enemy.world = this);
         this.character.animate();
         this.draw();
         this.checkCollisions();
