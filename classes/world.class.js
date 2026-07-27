@@ -10,6 +10,7 @@ class World {
     statusBar = new StatusBar();
     statusBarEnemy = new StatusBarEnemy();
     statusBarBottle = new StatusBarBottle();
+    statusBarCoin = new StatusBarCoin();
     bottlePercentage = 100;
     gameOver = false;
     throwableObjects = [];
@@ -85,6 +86,7 @@ class World {
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarEnemy);
         this.addToMap(this.statusBarBottle);
+        this.addToMap(this.statusBarCoin);
         
 
         let self = this;
