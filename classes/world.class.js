@@ -9,6 +9,8 @@ class World {
     camera_x = 0;
     statusBar = new StatusBar();
     statusBarEnemy = new StatusBarEnemy();
+    statusBarBottle = new StatusBarBottle();
+    bottlePercentage = 100;
     gameOver = false;
     throwableObjects = [];
     canThrow = true;
@@ -55,9 +57,11 @@ class World {
 
     checkThrowObjects() {
         setInterval(() => {
-            if (this.keyboard.D && this.canThrow) {
+            if (this.keyboard.D && this.canThrow && this.bottlePercentage > 0) {
                 let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 100, this.character.otherDirection);
                 this.throwableObjects.push(bottle);
+                this.bottlePercentage -= 20;
+                this.statusBarBottle.setPercentage(this.bottlePercentage);
                 this.canThrow = false;
             }
 
@@ -80,6 +84,7 @@ class World {
         this.ctx.translate(-this.camera_x, 0); // Kamera-Offset zurücksetzen
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarEnemy);
+        this.addToMap(this.statusBarBottle);
         
 
         let self = this;
