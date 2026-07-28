@@ -42,6 +42,10 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    heal(amount) {
+        this.energy = Math.min(100, this.energy + amount);
+    }
+
     isDead() {
         return this.energy <= 0;
     }

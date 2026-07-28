@@ -11,6 +11,7 @@ class World {
     statusBarEnemy = new StatusBarEnemy();
     statusBarBottle = new StatusBarBottle();
     statusBarCoin = new StatusBarCoin();
+    collectedCoins = 0;
     bottlePercentage = 100;
     gameOver = false;
     throwableObjects = [];
@@ -54,7 +55,21 @@ class World {
              this.statusBar.setPercentage(this.character.energy); // StatusBar aktualisieren
              }
          });
+         this.checkCoinCollisions();
         }, 200);
+    }
+
+    checkCoinCollisions() {
+        for (let i = this.level.coins.length - 1; i >= 0; i--) {
+            if (this.character.isColliding(this.level.coins[i])) {
+                this.level.coins.splice(i, 1);
+                this.collectedCoins++;
+                this.character.heal(10);
+                this.statusBar.setPercentage(this.character.energy);
+                let percentage = (this.collectedCoins / (this.collectedCoins + this.level.coins.length)) * 100;
+                this.statusBarCoin.setPercentage(percentage);
+            }
+        }
     }
 
     checkThrowObjects() {
@@ -88,6 +103,7 @@ class World {
         this.addToMap(this.statusBarCoin);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.bottles);
+        this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.addToMap(this.character);
