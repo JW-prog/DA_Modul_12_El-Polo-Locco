@@ -49,6 +49,31 @@ canvas{
     display: block;
 }
 
+.start-button-label {
+    position: absolute;
+    left: 50%;
+    bottom: 8%;
+    transform: translateX(-50%);
+    padding: 12px 28px;
+    border: 3px solid #7a2d0b;
+    border-radius: 12px;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 5px 0 #7a2d0b;
+    color: #7a2d0b;
+    font-family: 'Sancreek', cursive;
+    font-size: 28px;
+    white-space: nowrap;
+}
+
+.start-button:hover .start-button-label {
+    filter: brightness(1.1);
+}
+
+.start-button:active .start-button-label {
+    transform: translate(-50%, 4px);
+    box-shadow: 0 1px 0 #7a2d0b;
+}
+
 .is-hidden {
     display: none;
 }
