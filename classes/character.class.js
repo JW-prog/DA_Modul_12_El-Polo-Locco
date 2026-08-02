@@ -40,6 +40,8 @@ class Character extends MovableObject {
 
 
     world; // Reference to the World object
+    deathAnimationStarted = false;
+    deathAnimationFinished = false;
 
 
     constructor() {
@@ -60,6 +62,10 @@ class Character extends MovableObject {
     animate() {
 
         setInterval(() => {
+            if (this.isDead() || this.world.gameOver) {
+                return;
+            }
+
             if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX) {
                 this.moveRight(); // Prevent moving right beyond the level end
                 this.x += this.speed;
@@ -84,7 +90,11 @@ class Character extends MovableObject {
         setInterval(() => {
 
             if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
+                if (!this.deathAnimationStarted) {
+                    this.deathAnimationStarted = true;
+                    this.currentImage = 0;
+                }
+                this.playDeathAnimation();
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isAboveGround()) {
@@ -97,13 +107,28 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    playDeathAnimation() {
+        if (this.deathAnimationFinished) {
+            return;
+        }
+
+        let frameIndex = this.currentImage % this.IMAGES_DEAD.length;
+        this.img = this.imageCache[this.IMAGES_DEAD[frameIndex]];
+        this.currentImage++;
+
+        if (this.currentImage >= this.IMAGES_DEAD.length * 3) {
+            this.deathAnimationFinished = true;
+            setTimeout(() => this.isVisible = false, 50);
+        }
+    }
+
     jump() {
       console.log('Character is jumping');
     }
 
     gameOver() {
     if (this.isDead() && !this.world.gameOver) {
-        this.playAnimation(this.IMAGES_DEAD);
+        this.playAnimationOnce(this.IMAGES_DEAD);
 
         setTimeout(() => {
             this.world.gameOver = true;
