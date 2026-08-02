@@ -33,8 +33,8 @@ class MovableObject extends DrawableObject {
                this.y < mo.y + mo.height;
     }
 
-    hit() {
-        this.energy -= 2;
+    hit(damage = 2) {
+        this.energy -= damage;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -61,6 +61,15 @@ class MovableObject extends DrawableObject {
         let path = images[i];
         this.img = this.imageCache[path];
         this.currentImage++;
+    }
+
+    playAnimationOnce(images) {
+        let i = Math.min(this.currentImage, images.length - 1);
+        let path = images[i];
+        this.img = this.imageCache[path];
+        if (this.currentImage < images.length - 1) {
+            this.currentImage++;
+        }
     }
 
     moveRight() {

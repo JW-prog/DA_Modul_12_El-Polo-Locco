@@ -10,6 +10,7 @@ class Endboss extends MovableObject {
     lastAttack = 0;
     attackEnd = 0;
     animationState = '';
+    deathAnimationFinished = false;
 
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -73,8 +74,39 @@ class Endboss extends MovableObject {
     animate() {
         this.animationInterval = setInterval(() => {
             let animation = this.getCurrentAnimation();
-            this.playAnimation(animation);
+            if (this.isDead()) {
+                this.playDeathAnimation(animation);
+            } else {
+                this.playAnimation(animation);
+            }
         }, 120);
+    }
+
+    playDeathAnimation(images) {
+        if (this.deathAnimationFinished) {
+            return;
+        }
+
+        let frameIndex = this.currentImage % images.length;
+        this.img = this.imageCache[images[frameIndex]];
+        this.currentImage++;
+
+        if (this.currentImage >= images.length * 2) {
+            this.deathAnimationFinished = true;
+            setTimeout(() => this.removeFromWorld(), 120);
+        }
+    }
+
+    removeFromWorld() {
+        if (!this.world) {
+            return;
+        }
+
+        let index = this.world.level.enemies.indexOf(this);
+        if (index >= 0) {
+            this.world.level.enemies.splice(index, 1);
+        }
+        clearInterval(this.animationInterval);
     }
 
     move() {
