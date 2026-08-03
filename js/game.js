@@ -13,9 +13,24 @@ function startGame() {
     initLevel1();
     world = new World(canvas, keyboard);
     document.getElementById('startButton').classList.add('is-hidden');
+    document.getElementById('fullscreen').classList.add('game-running');
 
     console.log('My character is:', world.character);
   
+}
+
+function exitFullScreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
+}
+
+function reloadGame() {
+    window.location.reload();
 }
 
 window.addEventListener('keydown', (event) => {

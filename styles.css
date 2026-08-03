@@ -8,15 +8,19 @@ body{
     margin: 0;
     padding: 16px;
     box-sizing: border-box;
-    background-image: url('img/desert.jpg');
+    background-image: url('img/5_background/complete_background.png');
     background-size: cover;
     background-position: center;
 }
 
 canvas{
     background-color: black;
-    border: 1px solid rgb(245, 210, 7);
-    box-shadow: 0px 0px 30px rgb(229, 189, 12);
+    box-sizing: border-box;
+    border: 3px solid rgb(245, 210, 7);
+    box-shadow:
+        inset 0 0 12px rgba(255, 220, 45, 0.55),
+        0 0 12px rgba(229, 189, 12, 0.85),
+        0 8px 18px rgba(53, 20, 5, 0.75);
     display: block;
 }
 
@@ -54,7 +58,7 @@ canvas{
     left: 50%;
     bottom: 8%;
     transform: translateX(-50%);
-    padding: 12px 28px;
+    padding: 10px 23px;
     border: 3px solid #7a2d0b;
     border-radius: 12px;
     background: linear-gradient(#ffd438, #ff9d00);
@@ -69,6 +73,78 @@ canvas{
     filter: brightness(1.1);
 }
 
+.screen-button {
+    position: absolute;
+    z-index: 2;
+    bottom: 8%;
+    width: 58px;
+    height: 58px;
+    padding: 12px;
+    border: 3px solid #7a2d0b;
+    border-radius: 12px;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 5px 0 #7a2d0b;
+    color: #7a2d0b;
+    cursor: pointer;
+}
+
+.screen-button-left {
+    left: 8%;
+}
+
+.screen-button-right {
+    right: 8%;
+}
+
+.screen-button svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.screen-button:hover {
+    filter: brightness(1.1);
+}
+
+.screen-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #7a2d0b;
+}
+
+.game-container.game-running .screen-button {
+    top: 10px;
+    bottom: auto;
+    width: 28px;
+    height: 28px;
+    padding: 5px;
+    border-width: 2px;
+    border-radius: 50%;
+    box-shadow: 0 2px 0 #7a2d0b;
+}
+
+.game-container.game-running .screen-button-left {
+    left: calc(50% - 34px);
+}
+
+.game-container.game-running .screen-button-right {
+    right: calc(50% - 34px);
+}
+
+.game-container.game-running .screen-button:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.game-container:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+}
+
 .start-button:active .start-button-label {
     transform: translate(-50%, 4px);
     box-shadow: 0 1px 0 #7a2d0b;
@@ -78,25 +154,122 @@ canvas{
     display: none;
 }
 .description {
-    width: 80%;
-    height: 100px;
+    width: 720px;
+    min-height: 350px;
     text-align: center;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     font-size: 18px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-image: url('img/5_background/second_half_background.png');
+    background-size: cover;
+    background-position: center;
     padding: 10px;
-    border-radius: 5px;
-    color: white;
+    box-sizing: border-box;
+    border: 3px solid rgb(245, 210, 7);
+    border-radius: 70px;
+    box-shadow:
+        inset 0 0 12px rgba(255, 220, 45, 0.55),
+        0 0 12px rgba(229, 189, 12, 0.85),
+        0 8px 18px rgba(53, 20, 5, 0.75);
+    color: rgb(242, 219, 13);
     font-family: 'Sancreek', cursive;
+}
+
+.description h2 {
+    margin: 10px 0 22px;
+    font-size: 34px;
+    letter-spacing: 1px;
+    text-shadow: 2px 3px 0 #5b2109;
+}
+
+.control-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: min(460px, 90%);
+    margin: 0 auto;
+}
+
+.control-item {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 8px 18px;
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 212, 56, 0.8);
+    border-radius: 12px;
+    background: rgba(76, 28, 8, 0.82);
+    box-shadow: 0 4px 0 #351405, inset 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.control-item span {
+    text-align: left;
+    font-size: 20px;
+    text-shadow: 1px 2px 0 #351405;
+}
+
+.key-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.control-item kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 38px;
+    padding: 0 9px;
+    box-sizing: border-box;
+    border: 2px solid #7a2d0b;
+    border-radius: 8px;
+    background: linear-gradient(#ffe467, #ffad0a);
+    box-shadow: 0 4px 0 #7a2d0b;
+    color: #612207;
+    font-family: Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.control-item .key-space {
+    width: 118px;
+    margin: 0 auto;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.restart-button {
+    margin-top: 22px;
+    padding: 11px 30px;
+    border: 3px solid #7a2d0b;
+    border-radius: 12px;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 5px 0 #7a2d0b;
+    color: #612207;
+    font-family: 'Sancreek', cursive;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.restart-button:hover {
+    filter: brightness(1.1);
+}
+
+.restart-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #7a2d0b;
 }
 h1 {
     margin: 0 0 14px;
     color: rgb(245, 210, 7);
     text-shadow: 12px 2px 40px rgba(0, 0, 0, 0.5);
     font-family: 'Sancreek', cursive;
-    font-size: 64px;
+    font-size: 75px;
 }
 
 @media only screen and (max-width: 750px) {
@@ -107,5 +280,25 @@ h1 {
 
     h1 {
         font-size: 48px;
+    }
+
+    .screen-button {
+        width: 48px;
+        height: 48px;
+        padding: 10px;
+    }
+
+    .start-button-label {
+        padding: 10px 18px;
+        font-size: 22px;
+    }
+
+    .control-item {
+        grid-template-columns: 120px 1fr;
+        padding: 7px 10px;
+    }
+
+    .control-item span {
+        font-size: 17px;
     }
 }

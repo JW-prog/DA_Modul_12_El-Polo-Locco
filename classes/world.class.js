@@ -101,6 +101,7 @@ class World {
         this.gameOver = true;
         this.gameResult = result;
         this.gameResultStartedAt = new Date().getTime();
+        document.getElementById('restartButton').classList.remove('is-hidden');
     }
 
     checkEnemyCollisions() {

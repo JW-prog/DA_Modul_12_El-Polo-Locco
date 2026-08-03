@@ -32,20 +32,46 @@
 <body onload="initGame()">
     <h1>El pollo Loco</h1>
 
-    <div onclick="enterfullScreen()" id="fullscreen" class="game-container">
+    <div id="fullscreen" class="game-container">
         <canvas id="gameCanvas" width="720" height="480"></canvas>
         <button id="startButton" class="start-button" type="button" aria-label="Spiel starten">
             <img src="img/9_intro_outro_screens/start/startscreen_1.png" alt="El Pollo Loco – Spiel starten">
             <span class="start-button-label">Spiel starten</span>
         </button>
+        <button class="screen-button screen-button-left" type="button" onclick="enterfullScreen()" aria-label="Vollbildmodus einschalten" title="Vollbild">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" />
+            </svg>
+        </button>
+        <button class="screen-button screen-button-right" type="button" onclick="exitFullScreen()" aria-label="Vollbildmodus verlassen" title="Vollbild verlassen">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" />
+            </svg>
+        </button>
     </div>
 
     <div class="description">
         <h2>Steuerung</h2>
-        <p><strong>Pfeiltaste links/rechts:</strong> Character bewegen</p>
-        <p><strong>Leertaste:</strong> Springen</p>
-        <p><strong>Taste D:</strong> Flasche werfen</p>
-        <button type="button" onclick="enterfullScreen()">Vollbild</button>
+        <div class="control-list">
+            <div class="control-item">
+                <div class="key-group" aria-label="Pfeiltasten links und rechts">
+                    <kbd aria-hidden="true">&#8592;</kbd>
+                    <kbd aria-hidden="true">&#8594;</kbd>
+                </div>
+                <span>Character bewegen</span>
+            </div>
+            <div class="control-item">
+                <kbd class="key-space">Leertaste</kbd>
+                <span>Springen</span>
+            </div>
+            <div class="control-item">
+                <kbd>D</kbd>
+                <span>Flasche werfen</span>
+            </div>
+        </div>
+        <button id="restartButton" class="restart-button is-hidden" type="button" onclick="reloadGame()">
+            Neu starten
+        </button>
     </div>
 </body>
 </html>
