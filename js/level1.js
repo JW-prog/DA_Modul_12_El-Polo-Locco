@@ -1,5 +1,18 @@
 
     let level1;
+
+    function createCoinArc(startX, baseY, count = 5, spacing = 60, arcHeight = 130) {
+        let coins = [];
+
+        for (let i = 0; i < count; i++) {
+            let progress = i / (count - 1);
+            let y = baseY - 4 * arcHeight * progress * (1 - progress);
+            coins.push(new Coin(startX + i * spacing, y));
+        }
+
+        return coins;
+    }
+
     function initLevel1() {
         level1 = new Level([
         new Chicken(680),
@@ -63,16 +76,11 @@
         new Bottle(2050, 420)
     ],
     [
-        new Coin(250, 320),
-        new Coin(450, 250),
-        new Coin(650, 180),
-        new Coin(850, 250),
-        new Coin(1050, 320),
-        new Coin(1250, 230),
-        new Coin(1450, 150),
-        new Coin(1650, 230),
-        new Coin(2050, 320),
-        new Coin(2100, 220)
+        ...createCoinArc(240, 330, 5, 60, 130),
+        ...createCoinArc(650, 310, 5, 60, 110),
+        ...createCoinArc(1060, 340, 5, 60, 150),
+        ...createCoinArc(1470, 310, 5, 60, 110),
+        ...createCoinArc(1850, 340, 5, 60, 140)
     ]
 );
 }

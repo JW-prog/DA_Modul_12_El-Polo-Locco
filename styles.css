@@ -143,6 +143,14 @@ canvas{
     width: 100vw;
     height: 100vh;
     background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-container:fullscreen canvas {
+    width: min(100vw, 150vh);
+    height: min(100vh, 66.6667vw);
 }
 
 .start-button:active .start-button-label {

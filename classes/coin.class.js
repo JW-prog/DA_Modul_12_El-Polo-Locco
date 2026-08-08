@@ -1,6 +1,6 @@
 class Coin extends DrawableObject {
-    width = 70;
-    height = 70;
+    width = 80;
+    height = 80;
 
     IMAGES_COIN = [
         'img/8_coin/coin_1.png',

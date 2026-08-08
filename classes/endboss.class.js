@@ -138,7 +138,8 @@ class Endboss extends MovableObject {
 
     hasVisualContact() {
         let screenX = this.x + this.world.camera_x;
-        return screenX < this.world.canvas.width && screenX + this.width > 0;
+        let canvasWidth = this.world.canvas.logicalWidth || this.world.canvas.width;
+        return screenX < canvasWidth && screenX + this.width > 0;
     }
 
     getCurrentAnimation() {

@@ -245,7 +245,8 @@ class World {
 
 
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.setTransform(this.canvas.pixelRatio || 1, 0, 0, this.canvas.pixelRatio || 1, 0, 0);
+        this.ctx.clearRect(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
 
         this.ctx.translate(this.camera_x, 0); // Kamera-Offset anwenden
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -264,10 +265,21 @@ class World {
         this.addToMap(this.character);
         this.ctx.translate(-this.camera_x, 0); // Kamera-Offset zurücksetzen
         this.drawGameResult();
-        let self = this;
-        requestAnimationFrame(function() {
-            self.draw();
-        });
+        if (this.shouldContinueDrawing()) {
+            requestAnimationFrame(() => this.draw());
+        }
+    }
+
+    shouldContinueDrawing() {
+        return !this.gameResult || new Date().getTime() - this.gameResultStartedAt < 2000;
+    }
+
+    getCanvasWidth() {
+        return this.canvas.logicalWidth || this.canvas.width;
+    }
+
+    getCanvasHeight() {
+        return this.canvas.logicalHeight || this.canvas.height;
     }
 
     drawGameResult() {
@@ -282,7 +294,7 @@ class World {
 
         this.ctx.save();
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillRect(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
         this.drawCenteredResultImage(image);
         this.ctx.restore();
     }
@@ -292,13 +304,13 @@ class World {
             return;
         }
 
-        let maxWidth = this.canvas.width * 0.9;
-        let maxHeight = this.canvas.height * 0.9;
+        let maxWidth = this.getCanvasWidth() * 0.9;
+        let maxHeight = this.getCanvasHeight() * 0.9;
         let scale = Math.min(maxWidth / image.naturalWidth, maxHeight / image.naturalHeight);
         let width = image.naturalWidth * scale;
         let height = image.naturalHeight * scale;
-        let x = (this.canvas.width - width) / 2;
-        let y = (this.canvas.height - height) / 2;
+        let x = (this.getCanvasWidth() - width) / 2;
+        let y = (this.getCanvasHeight() - height) / 2;
         this.ctx.drawImage(image, x, y, width, height);
     }
 

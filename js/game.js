@@ -10,6 +10,7 @@ function initGame() {
 
 function startGame() {
     canvas = document.getElementById('gameCanvas');
+    configureCanvas(canvas);
     initLevel1();
     world = new World(canvas, keyboard);
     document.getElementById('startButton').classList.add('is-hidden');
@@ -17,6 +18,18 @@ function startGame() {
 
     console.log('My character is:', world.character);
   
+}
+
+function configureCanvas(canvasElement) {
+    const logicalWidth = 720;
+    const logicalHeight = 480;
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvasElement.logicalWidth = logicalWidth;
+    canvasElement.logicalHeight = logicalHeight;
+    canvasElement.pixelRatio = pixelRatio;
+    canvasElement.width = logicalWidth * pixelRatio;
+    canvasElement.height = logicalHeight * pixelRatio;
 }
 
 function exitFullScreen() {
@@ -34,49 +47,54 @@ function reloadGame() {
 }
 
 window.addEventListener('keydown', (event) => {
-    if (event.keyCode === 37) {
+    preventGameKeyScrolling(event);
+    if (event.code === 'ArrowLeft') {
         keyboard.LEFT = true;
     }
-    if (event.keyCode === 39) {
+    if (event.code === 'ArrowRight') {
         keyboard.RIGHT = true;
     }
-    if (event.keyCode === 38) {
+    if (event.code === 'ArrowUp') {
         keyboard.UP = true;
     }
-    if (event.keyCode === 40) {
+    if (event.code === 'ArrowDown') {
         keyboard.DOWN = true;
     }
-    if (event.keyCode === 32) {
+    if (event.code === 'Space') {
         keyboard.SPACE = true;
     }
-    if (event.keyCode === 68) {
+    if (event.code === 'KeyD') {
         if (!keyboard.D && !event.repeat) {
             keyboard.THROW = true;
         }
         keyboard.D = true;
     }
-    console.log(keyboard);
 });
 
 window.addEventListener('keyup', (event) => {
-    console.log('Key released:', event.keyCode);
-    if (event.keyCode === 37) {
+    if (event.code === 'ArrowLeft') {
         keyboard.LEFT = false;
     }
-    if (event.keyCode === 39) {
+    if (event.code === 'ArrowRight') {
         keyboard.RIGHT = false;
     }
-    if (event.keyCode === 38) {
+    if (event.code === 'ArrowUp') {
         keyboard.UP = false;
     }
-    if (event.keyCode === 40) {
+    if (event.code === 'ArrowDown') {
         keyboard.DOWN = false;
     }
-    if (event.keyCode === 32) {
+    if (event.code === 'Space') {
         keyboard.SPACE = false;
     }
-    if (event.keyCode === 68) {
+    if (event.code === 'KeyD') {
         keyboard.D = false;
     }
-    console.log(keyboard);
 });
+
+function preventGameKeyScrolling(event) {
+    const gameKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'];
+    if (world && !world.gameOver && gameKeys.includes(event.code)) {
+        event.preventDefault();
+    }
+}
