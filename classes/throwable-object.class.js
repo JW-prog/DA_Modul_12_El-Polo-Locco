@@ -1,4 +1,8 @@
 class ThrowableObject extends MovableObject {
+    hasHit = false;
+    gravityInterval;
+    movementInterval;
+    rotationInterval;
     IMAGES_ROTATION = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         'img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
@@ -32,13 +36,35 @@ class ThrowableObject extends MovableObject {
         this.speedY = 24;
         this.applyGravity();
 
-        setInterval(() => {
+        this.movementInterval = setInterval(() => {
             this.x += this.otherDirection ? -10 : 10;
         }, 1000 / 40);
 
-        setInterval(() => {
+        this.rotationInterval = setInterval(() => {
             this.playAnimation(this.IMAGES_ROTATION);
         }, 100);
+    }
+
+    applyGravity() {
+        this.gravityInterval = setInterval(() => {
+            if (!this.hasHit) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            }
+        }, 1000 / 30);
+    }
+
+    splash(enemy) {
+        this.hasHit = true;
+        this.speedY = 0;
+        clearInterval(this.gravityInterval);
+        clearInterval(this.movementInterval);
+        clearInterval(this.rotationInterval);
+        this.width = 90;
+        this.height = 90;
+        this.x = enemy.x + (enemy.width - this.width) / 2;
+        this.y = enemy.y + (enemy.height - this.height) / 2;
+        this.img = this.imageCache[this.IMAGES_SPLASH[1]];
     }
 
     isAboveGround() {

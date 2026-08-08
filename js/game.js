@@ -50,6 +50,9 @@ window.addEventListener('keydown', (event) => {
         keyboard.SPACE = true;
     }
     if (event.keyCode === 68) {
+        if (!keyboard.D && !event.repeat) {
+            keyboard.THROW = true;
+        }
         keyboard.D = true;
     }
     console.log(keyboard);

@@ -19,7 +19,7 @@ class StatusBarBottle extends DrawableObject {
   constructor() {
     super();
     this.loadImages(this.IMAGES_BOTTLES);
-    this.setPercentage(100);
+    this.setPercentage(0);
   }
 
     setPercentage(percentage) {

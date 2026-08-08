@@ -5,15 +5,17 @@ class MovableObject extends DrawableObject {
     speedY = 0;
     acceleration = 2.5;
     energy = 100;
+    maxEnergy = 100;
     lastHit = 0;
+    damageCooldown = 1000;
 
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
+                this.y -= this.speedY / 2;
+                this.speedY -= this.acceleration / 2;
             }
-        }, 1000 / 30);
+        }, 1000 / 60);
     }
 
     isAboveGround() {
@@ -33,7 +35,7 @@ class MovableObject extends DrawableObject {
                this.y < mo.y + mo.height;
     }
 
-    hit(damage = 2) {
+    hit(damage = 1) {
         this.energy -= damage;
         if (this.energy < 0) {
             this.energy = 0;
@@ -42,8 +44,12 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    canTakeDamage() {
+        return new Date().getTime() - this.lastHit >= this.damageCooldown;
+    }
+
     heal(amount) {
-        this.energy = Math.min(100, this.energy + amount);
+        this.energy = Math.min(this.maxEnergy, this.energy + amount);
     }
 
     isDead() {

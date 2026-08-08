@@ -11,6 +11,7 @@ class Endboss extends MovableObject {
     attackEnd = 0;
     animationState = '';
     deathAnimationFinished = false;
+    hasSeenCharacter = false;
 
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -115,6 +116,13 @@ class Endboss extends MovableObject {
                 return;
             }
 
+            if (!this.hasSeenCharacter) {
+                this.hasSeenCharacter = this.hasVisualContact();
+                if (!this.hasSeenCharacter) {
+                    return;
+                }
+            }
+
             let character = this.world.character;
             let distance = Math.abs(character.x - this.x);
 
@@ -128,6 +136,11 @@ class Endboss extends MovableObject {
         }, 1000 / 60);
     }
 
+    hasVisualContact() {
+        let screenX = this.x + this.world.camera_x;
+        return screenX < this.world.canvas.width && screenX + this.width > 0;
+    }
+
     getCurrentAnimation() {
         if (this.isDead()) {
             return this.setAnimationState('dead', this.IMAGES_DEAD);
@@ -137,6 +150,9 @@ class Endboss extends MovableObject {
         }
         if (this.isAttacking()) {
             return this.setAnimationState('attack', this.IMAGES_ATTACK);
+        }
+        if (!this.hasSeenCharacter) {
+            return this.setAnimationState('alert', this.IMAGES_ALERT);
         }
         return this.setAnimationState('walking', this.IMAGES_WALKING);
     }
@@ -161,8 +177,10 @@ class Endboss extends MovableObject {
 
         this.lastAttack = now;
         this.attackEnd = now + 800;
-        this.world.character.hit();
-        this.world.statusBar.setPercentage(this.world.character.energy);
+        if (this.world.character.canTakeDamage()) {
+            this.world.character.hit(this.world.getEnemyCollisionDamage(this));
+            this.world.updateCharacterStatusBar();
+        }
     }
 
 }
