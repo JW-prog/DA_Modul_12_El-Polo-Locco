@@ -3,6 +3,9 @@ class Character extends MovableObject {
     height = 280;
     width = 120;
     y = 100;
+    energy = 200;
+    maxEnergy = 200;
+    damageCooldown = 500;
      IMAGES_WALKING = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -55,6 +58,7 @@ class Character extends MovableObject {
     deathAnimationStarted = false;
     deathAnimationFinished = false;
     hasWokenUp = false;
+    animationState = '';
 
 
     constructor() {
@@ -68,7 +72,23 @@ class Character extends MovableObject {
 
     
         this.applyGravity();
-        this.x = 220 + Math.random() * 500; // Random x position between 200 and 700
+        this.x = 220;
+    }
+
+    hit(damage = 2) {
+        super.hit(damage);
+        if (this.isDead()) {
+            this.startDeathAnimation();
+        }
+    }
+
+    startDeathAnimation() {
+        if (this.deathAnimationStarted) {
+            return;
+        }
+        this.deathAnimationStarted = true;
+        this.currentImage = 0;
+        this.img = this.imageCache[this.IMAGES_DEAD[0]];
     }
 
 
@@ -85,13 +105,11 @@ class Character extends MovableObject {
             }
 
             if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX) {
-                this.moveRight(); // Prevent moving right beyond the level end
                 this.x += this.speed;
                 this.otherDirection = false; // Character is facing right
                
             }
             if (this.world.keyboard.LEFT && this.x > 120) {
-                this.moveLeft(); // Prevent moving left beyond the canvas
                 this.x -= this.speed;
                 this.otherDirection = true; // Character is facing left
             }
@@ -108,23 +126,30 @@ class Character extends MovableObject {
         setInterval(() => {
 
             if (this.isDead()) {
-                if (!this.deathAnimationStarted) {
-                    this.deathAnimationStarted = true;
-                    this.currentImage = 0;
-                }
+                this.startDeathAnimation();
                 this.playDeathAnimation();
             } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
+                this.playCharacterAnimation('hurt', this.IMAGES_HURT);
             } else if (!this.hasWokenUp) {
-                this.playAnimation(this.IMAGES_SLEEPING);
+                this.playCharacterAnimation('sleeping', this.IMAGES_SLEEPING);
             } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
+                this.playCharacterAnimation('jumping', this.IMAGES_JUMPING);
             } else {
                 if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
+                    this.playCharacterAnimation('walking', this.IMAGES_WALKING);
+                } else {
+                    this.animationState = 'standing';
                 }
             }
-        }, 50);
+        }, 80);
+    }
+
+    playCharacterAnimation(state, images) {
+        if (this.animationState !== state) {
+            this.animationState = state;
+            this.currentImage = 0;
+        }
+        this.playAnimation(images);
     }
 
     playDeathAnimation() {
