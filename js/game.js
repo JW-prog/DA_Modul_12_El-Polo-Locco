@@ -6,22 +6,96 @@ let keyboard = new Keyboard();
 function initGame() {
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', startGame, { once: true });
+    initTouchControls();
     updateSoundButton();
 }
 
-function startGame() {
+function initTouchControls() {
+    document.querySelectorAll('.touch-button').forEach(button => {
+        button.addEventListener('pointerdown', event => pressTouchButton(event, button));
+        button.addEventListener('pointerup', event => releaseTouchButton(event, button));
+        button.addEventListener('pointercancel', event => releaseTouchButton(event, button));
+        button.addEventListener('contextmenu', event => event.preventDefault());
+    });
+}
+
+function pressTouchButton(event, button) {
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    button.classList.add('is-pressed');
+    const key = button.dataset.key;
+    if (key === 'THROW') {
+        keyboard.THROW = true;
+    } else {
+        keyboard[key] = true;
+    }
+}
+
+function releaseTouchButton(event, button) {
+    event.preventDefault();
+    button.classList.remove('is-pressed');
+    const key = button.dataset.key;
+    if (key !== 'THROW') {
+        keyboard[key] = false;
+    }
+}
+
+async function startGame() {
+    const startButton = document.getElementById('startButton');
+    const startLabel = startButton.querySelector('.start-button-label');
+    startButton.disabled = true;
+    startLabel.textContent = 'Spiel wird geladen ...';
     canvas = document.getElementById('gameCanvas');
     configureCanvas(canvas);
     initLevel1();
     world = new World(canvas, keyboard);
+    await waitForInitialGameImages();
+    await waitForNextFrame();
     audioManager.start();
-    document.getElementById('startButton').classList.add('is-hidden');
+    startButton.classList.add('is-hidden');
     document.getElementById('startOptions').classList.add('is-hidden');
     updateSoundButton();
     document.getElementById('fullscreen').classList.add('game-running');
 
     console.log('My character is:', world.character);
   
+}
+
+function waitForInitialGameImages() {
+    const drawableObjects = [
+        world.character,
+        world.statusBar,
+        world.statusBarEnemy,
+        world.statusBarBottle,
+        world.statusBarCoin,
+        ...world.level.backgroundObjects,
+        ...world.level.clouds,
+        ...world.level.bottles,
+        ...world.level.coins,
+        ...world.level.enemies
+    ];
+    const images = new Set();
+
+    drawableObjects.forEach(object => {
+        if (object.img) images.add(object.img);
+        Object.values(object.imageCache || {}).forEach(image => images.add(image));
+    });
+
+    return Promise.all([...images].map(waitForImage));
+}
+
+function waitForImage(image) {
+    if (image.complete) {
+        return Promise.resolve();
+    }
+    return new Promise(resolve => {
+        image.addEventListener('load', resolve, { once: true });
+        image.addEventListener('error', resolve, { once: true });
+    });
+}
+
+function waitForNextFrame() {
+    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
 
 function openOverlay(overlayId) {

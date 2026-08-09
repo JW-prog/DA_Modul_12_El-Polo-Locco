@@ -210,13 +210,33 @@ class World {
 
     checkCoinCollisions() {
         for (let i = this.level.coins.length - 1; i >= 0; i--) {
-            if (this.character.isColliding(this.level.coins[i])) {
+            if (this.isCharacterCloseToCoin(this.level.coins[i])) {
                 this.level.coins.splice(i, 1);
                 audioManager.playCoinSound();
                 this.collectedCoins++;
                 this.statusBarCoin.setProgress(this.collectedCoins, this.totalCoins);
             }
         }
+    }
+
+    isCharacterCloseToCoin(coin) {
+        const characterHitbox = {
+            left: this.character.x + 35,
+            right: this.character.x + this.character.width - 35,
+            top: this.character.y + 45,
+            bottom: this.character.y + this.character.height - 25
+        };
+        const coinHitbox = {
+            left: coin.x + 18,
+            right: coin.x + coin.width - 18,
+            top: coin.y + 18,
+            bottom: coin.y + coin.height - 18
+        };
+
+        return characterHitbox.right > coinHitbox.left &&
+            characterHitbox.left < coinHitbox.right &&
+            characterHitbox.bottom > coinHitbox.top &&
+            characterHitbox.top < coinHitbox.bottom;
     }
 
     checkBottleCollisions() {

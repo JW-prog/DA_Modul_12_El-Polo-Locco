@@ -76,7 +76,7 @@
         new Bottle(2050, 420)
     ],
     [
-        ...createCoinArc(240, 330, 5, 60, 130),
+        ...createCoinArc(400, 330, 5, 60, 130),
         ...createCoinArc(650, 310, 5, 60, 110),
         ...createCoinArc(1060, 340, 5, 60, 150),
         ...createCoinArc(1470, 310, 5, 60, 110),
