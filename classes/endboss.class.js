@@ -121,6 +121,7 @@ class Endboss extends MovableObject {
                 if (!this.hasSeenCharacter) {
                     return;
                 }
+                audioManager.startEndbossSound();
             }
 
             let character = this.world.character;
@@ -181,6 +182,13 @@ class Endboss extends MovableObject {
         if (this.world.character.canTakeDamage()) {
             this.world.character.hit(this.world.getEnemyCollisionDamage(this));
             this.world.updateCharacterStatusBar();
+        }
+    }
+
+    hit(damage = 1) {
+        super.hit(damage);
+        if (this.isDead()) {
+            audioManager.stopEndbossSound();
         }
     }
 

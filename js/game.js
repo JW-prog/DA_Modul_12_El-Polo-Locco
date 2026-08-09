@@ -6,6 +6,7 @@ let keyboard = new Keyboard();
 function initGame() {
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', startGame, { once: true });
+    updateSoundButton();
 }
 
 function startGame() {
@@ -13,11 +14,43 @@ function startGame() {
     configureCanvas(canvas);
     initLevel1();
     world = new World(canvas, keyboard);
+    audioManager.start();
     document.getElementById('startButton').classList.add('is-hidden');
+    document.getElementById('startOptions').classList.add('is-hidden');
+    updateSoundButton();
     document.getElementById('fullscreen').classList.add('game-running');
 
     console.log('My character is:', world.character);
   
+}
+
+function openOverlay(overlayId) {
+    const overlay = document.getElementById(overlayId);
+    overlay.classList.remove('is-hidden');
+    overlay.querySelector('.overlay-close').focus();
+}
+
+function closeOverlay(overlayId) {
+    document.getElementById(overlayId).classList.add('is-hidden');
+}
+
+window.addEventListener('keydown', (event) => {
+    if (event.code === 'Escape') {
+        document.querySelectorAll('.game-overlay').forEach(overlay => overlay.classList.add('is-hidden'));
+    }
+});
+
+function toggleSound() {
+    audioManager.toggleMute();
+    updateSoundButton();
+}
+
+function updateSoundButton() {
+    const soundButton = document.getElementById('soundButton');
+    const muted = audioManager.isMuted;
+    soundButton.querySelector('span').textContent = muted ? '\uD83D\uDD07' : '\uD83D\uDD0A';
+    soundButton.setAttribute('aria-label', muted ? 'Ton einschalten' : 'Ton ausschalten');
+    soundButton.title = muted ? 'Ton einschalten' : 'Ton ausschalten';
 }
 
 function configureCanvas(canvasElement) {

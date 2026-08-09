@@ -1,5 +1,7 @@
 class StatusBarCoin extends DrawableObject {
     percentage = 0;
+    collectedCoins = 0;
+    totalCoins = 0;
     x = 20;
     y = 120;
     width = 200;
@@ -22,17 +24,23 @@ class StatusBarCoin extends DrawableObject {
     }
 
     setPercentage(percentage) {
-        this.percentage = percentage;
+        this.percentage = Math.max(0, Math.min(100, percentage));
         let path = this.IMAGES_COIN[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
 
-    resolveImageIndex() {
-        if (this.percentage == 100) return 5;
-        if (this.percentage >= 80) return 4;
-        if (this.percentage >= 60) return 3;
-        if (this.percentage >= 40) return 2;
-        if (this.percentage >= 20) return 1;
-        return 0;
+    setProgress(collectedCoins, totalCoins) {
+        this.collectedCoins = collectedCoins;
+        this.totalCoins = totalCoins;
+        let percentage = totalCoins > 0 ? (collectedCoins / totalCoins) * 100 : 0;
+        this.setPercentage(percentage);
     }
+
+    resolveImageIndex() {
+        if (this.percentage <= 0) {
+            return 0;
+        }
+        return Math.min(5, Math.ceil(this.percentage / 20));
+    }
+
 }

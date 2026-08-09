@@ -72,6 +72,8 @@ class Character extends MovableObject {
     animationState = '';
     lastMovementTime = Date.now() - 5000;
     longIdleDelay = 5000;
+    wasInAir = false;
+    jumpStarted = false;
 
 
     constructor() {
@@ -111,8 +113,12 @@ class Character extends MovableObject {
 
         setInterval(() => {
             if (this.isDead() || this.world.gameOver) {
+                audioManager.setWalkingSound(false);
                 return;
             }
+
+            this.checkLanding();
+            this.updateWalkingSound();
 
             if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
                 this.lastMovementTime = Date.now();
@@ -132,6 +138,7 @@ class Character extends MovableObject {
 
             if(this.world.keyboard.SPACE && !this.isAboveGround()) { // Jump only if character is on the ground
                this.speedY = 30; // Set the vertical speed for jumping
+               this.jumpStarted = true;
             }
 
             this.world.camera_x = -this.x + 100; // Adjust camera position based on character's x position
@@ -154,6 +161,20 @@ class Character extends MovableObject {
                 this.playCharacterAnimation('idle', this.IMAGES_IDLE);
             }
         }, 80);
+    }
+
+    checkLanding() {
+        const isInAir = this.isAboveGround();
+        if (this.jumpStarted && this.wasInAir && !isInAir) {
+            audioManager.playLandingSound();
+            this.jumpStarted = false;
+        }
+        this.wasInAir = isInAir;
+    }
+
+    updateWalkingSound() {
+        const isMoving = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
+        audioManager.setWalkingSound(isMoving && !this.isAboveGround());
     }
 
     playCharacterAnimation(state, images) {

@@ -1,0 +1,177 @@
+.sound-button {
+    position: absolute;
+    z-index: 3;
+    top: auto;
+    right: calc(50% - 71px);
+    bottom: 21%;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 2px solid #7a2d0b;
+    border-radius: 50%;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 2px 0 #7a2d0b;
+    color: #7a2d0b;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.start-options {
+    position: absolute;
+    z-index: 4;
+    left: calc(50% - 25px);
+    bottom: 21%;
+    display: flex;
+    gap: 8px;
+    transform: translateX(-50%);
+}
+
+.start-options.is-hidden,
+.game-overlay.is-hidden {
+    display: none;
+}
+
+.menu-icon-button,
+.overlay-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 7px;
+    border: 2px solid #7a2d0b;
+    border-radius: 50%;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 3px 0 #7a2d0b;
+    color: #7a2d0b;
+    cursor: pointer;
+}
+
+.menu-icon-button svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-icon-button:hover,
+.overlay-close:hover {
+    filter: brightness(1.1);
+}
+
+.menu-icon-button:active,
+.overlay-close:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #7a2d0b;
+}
+
+.game-container.game-running .sound-button {
+    top: 10px;
+    right: 10px;
+    bottom: auto;
+    width: 34px;
+    height: 34px;
+    font-size: 17px;
+}
+
+.game-overlay {
+    position: absolute;
+    z-index: 10;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    background: rgba(38, 13, 3, 0.78);
+    backdrop-filter: blur(3px);
+}
+
+.overlay-card {
+    position: relative;
+    width: min(520px, 92%);
+    max-height: 90%;
+    overflow: auto;
+    padding: 22px 24px;
+    box-sizing: border-box;
+    border: 3px solid #f5d207;
+    border-radius: 22px;
+    background: linear-gradient(rgba(102, 42, 10, 0.96), rgba(54, 20, 5, 0.98));
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+    color: #f5d207;
+    font-family: 'Sancreek', cursive;
+    text-align: center;
+}
+
+.overlay-card h2 {
+    margin: 0 42px 18px;
+    font-size: 30px;
+}
+
+.overlay-card p {
+    margin: 12px 0;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.45;
+}
+
+.overlay-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    padding: 0 0 3px;
+    font-family: Arial, sans-serif;
+    font-size: 25px;
+}
+
+.game-actions {
+    min-height: 72px;
+    text-align: center;
+}
+
+.screen-button {
+    width: 44px;
+    height: 44px;
+    padding: 9px;
+}
+
+.start-button-label {
+    padding: 8px 17px;
+    border-width: 2px;
+    font-size: 22px;
+}
+
+.sound-button:hover {
+    filter: brightness(1.1);
+}
+
+.sound-button:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+@media only screen and (max-width: 520px) {
+    .start-options,
+    .sound-button {
+        bottom: 23%;
+    }
+
+    .overlay-card {
+        padding: 18px 14px;
+    }
+
+    .overlay-card h2 {
+        font-size: 24px;
+    }
+
+    .overlay-card .control-item {
+        grid-template-columns: 105px 1fr;
+        min-height: 44px;
+    }
+}

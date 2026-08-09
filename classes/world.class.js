@@ -12,6 +12,7 @@ class World {
     statusBarBottle = new StatusBarBottle();
     statusBarCoin = new StatusBarCoin();
     collectedCoins = 0;
+    totalCoins = 0;
     bottlePercentage = 0;
     gameOver = false;
     gameResult = null;
@@ -24,6 +25,8 @@ class World {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.keyboard = keyboard;
+        this.totalCoins = this.level.coins.length;
+        this.statusBarCoin.setProgress(0, this.totalCoins);
         this.loadGameResultImages();
         this.character = new Character();
         this.character.world = this;
@@ -109,6 +112,7 @@ class World {
         this.gameOver = true;
         this.gameResult = result;
         this.gameResultStartedAt = new Date().getTime();
+        audioManager.stop();
         document.getElementById('restartButton').classList.remove('is-hidden');
     }
 
@@ -205,15 +209,12 @@ class World {
     }
 
     checkCoinCollisions() {
-        if (!this.character.isAboveGround()) {
-            return;
-        }
         for (let i = this.level.coins.length - 1; i >= 0; i--) {
             if (this.character.isColliding(this.level.coins[i])) {
                 this.level.coins.splice(i, 1);
+                audioManager.playCoinSound();
                 this.collectedCoins++;
-                let percentage = (this.collectedCoins / (this.collectedCoins + this.level.coins.length)) * 100;
-                this.statusBarCoin.setPercentage(percentage);
+                this.statusBarCoin.setProgress(this.collectedCoins, this.totalCoins);
             }
         }
     }

@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sancreek&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="audio-controls.css">
     <script src="classes/drawable-object.class.js"></script>
     <script src="classes/movable-object.class.js"></script>
     <script src="classes/keyboard.class.js"></script>
@@ -28,6 +29,7 @@
     <script src="classes/world.class.js"></script>
     <script src="js/level1.js" defer></script>
     <script src="classes/throwable-object.class.js"></script>
+    <script src="js/audio-manager.js" defer></script>
     <script src="js/game.js" defer></script>
 </head>
 <body onload="initGame()">
@@ -39,6 +41,19 @@
             <img src="img/9_intro_outro_screens/start/startscreen_1.png" alt="El Pollo Loco – Spiel starten">
             <span class="start-button-label">Spiel starten</span>
         </button>
+        <div id="startOptions" class="start-options" aria-label="Spieloptionen">
+            <button class="menu-icon-button" type="button" onclick="openOverlay('controlsOverlay')" aria-label="Steuerung anzeigen" title="Steuerung">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M16 4v12M11 9h10M16 16c-6 0-10 3-10 8v3h20v-3c0-5-4-8-10-8Z" />
+                    <circle cx="11" cy="22" r="1.5" /><circle cx="21" cy="22" r="1.5" />
+                </svg>
+            </button>
+            <button class="menu-icon-button" type="button" onclick="openOverlay('gameInfoOverlay')" aria-label="Spielerklärung anzeigen" title="Spielerklärung">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <circle cx="16" cy="16" r="12" /><path d="M16 14v9M16 9.5v.5" />
+                </svg>
+            </button>
+        </div>
         <button class="screen-button screen-button-left" type="button" onclick="enterfullScreen()" aria-label="Vollbildmodus einschalten" title="Vollbild">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" />
@@ -49,27 +64,31 @@
                 <path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" />
             </svg>
         </button>
-    </div>
-
-    <div class="description">
-        <h2>Steuerung</h2>
-        <div class="control-list">
-            <div class="control-item">
-                <div class="key-group" aria-label="Pfeiltasten links und rechts">
-                    <kbd aria-hidden="true">&#8592;</kbd>
-                    <kbd aria-hidden="true">&#8594;</kbd>
+        <button id="soundButton" class="sound-button" type="button" onclick="toggleSound()" aria-label="Ton ausschalten" title="Ton ausschalten">
+            <span aria-hidden="true">&#128266;</span>
+        </button>
+        <div id="controlsOverlay" class="game-overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="controlsTitle">
+            <div class="overlay-card">
+                <button class="overlay-close" type="button" onclick="closeOverlay('controlsOverlay')" aria-label="Steuerung schließen">&times;</button>
+                <h2 id="controlsTitle">Steuerung</h2>
+                <div class="control-list">
+                    <div class="control-item"><div class="key-group"><kbd>&larr;</kbd><kbd>&rarr;</kbd></div><span>Pepe bewegen</span></div>
+                    <div class="control-item"><kbd class="key-space">Leertaste</kbd><span>Springen</span></div>
+                    <div class="control-item"><kbd>D</kbd><span>Flasche werfen</span></div>
                 </div>
-                <span>Character bewegen</span>
-            </div>
-            <div class="control-item">
-                <kbd class="key-space">Leertaste</kbd>
-                <span>Springen</span>
-            </div>
-            <div class="control-item">
-                <kbd>D</kbd>
-                <span>Flasche werfen</span>
             </div>
         </div>
+        <div id="gameInfoOverlay" class="game-overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="gameInfoTitle">
+            <div class="overlay-card game-info-card">
+                <button class="overlay-close" type="button" onclick="closeOverlay('gameInfoOverlay')" aria-label="Spielerklärung schließen">&times;</button>
+                <h2 id="gameInfoTitle">So wird gespielt</h2>
+                <p>Sammle Münzen und Salsa-Flaschen auf deinem Weg durch die Wüste.</p>
+                <p>Springe auf kleine Hühner oder besiege sie mit geworfenen Flaschen. Spare genug Flaschen für den Endboss und besiege ihn, bevor Pepe seine gesamte Energie verliert.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-actions">
         <button id="restartButton" class="restart-button is-hidden" type="button" onclick="reloadGame()">
             Neu starten
         </button>
