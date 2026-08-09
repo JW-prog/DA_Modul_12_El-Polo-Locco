@@ -36,6 +36,10 @@
     <h1>El pollo Loco</h1>
 
     <div id="fullscreen" class="game-container">
+        <div class="orientation-warning" role="status" aria-live="polite">
+            <div class="orientation-phone" aria-hidden="true"></div>
+            <p>Turn your device to play</p>
+        </div>
         <canvas id="gameCanvas" width="720" height="480"></canvas>
         <button id="startButton" class="start-button" type="button" aria-label="Spiel starten">
             <img src="img/9_intro_outro_screens/start/startscreen_1.png" alt="El Pollo Loco – Spiel starten">
@@ -67,6 +71,16 @@
         <button id="soundButton" class="sound-button" type="button" onclick="toggleSound()" aria-label="Ton ausschalten" title="Ton ausschalten">
             <span aria-hidden="true">&#128266;</span>
         </button>
+        <div class="touch-controls" aria-label="Touch-Steuerung">
+            <div class="touch-control-group">
+                <button class="touch-button" type="button" data-key="LEFT" aria-label="Nach links bewegen">&larr;</button>
+                <button class="touch-button" type="button" data-key="RIGHT" aria-label="Nach rechts bewegen">&rarr;</button>
+            </div>
+            <div class="touch-control-group">
+                <button class="touch-button touch-button-action" type="button" data-key="SPACE" aria-label="Springen">Jump</button>
+                <button class="touch-button touch-button-action" type="button" data-key="THROW" aria-label="Flasche werfen">Throw</button>
+            </div>
+        </div>
         <div id="controlsOverlay" class="game-overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="controlsTitle">
             <div class="overlay-card">
                 <button class="overlay-close" type="button" onclick="closeOverlay('controlsOverlay')" aria-label="Steuerung schließen">&times;</button>
@@ -86,9 +100,6 @@
                 <p>Springe auf kleine Hühner oder besiege sie mit geworfenen Flaschen. Spare genug Flaschen für den Endboss und besiege ihn, bevor Pepe seine gesamte Energie verliert.</p>
             </div>
         </div>
-    </div>
-
-    <div class="game-actions">
         <button id="restartButton" class="restart-button is-hidden" type="button" onclick="reloadGame()">
             Neu starten
         </button>
