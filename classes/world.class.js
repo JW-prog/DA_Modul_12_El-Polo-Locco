@@ -113,6 +113,11 @@ class World {
         this.gameResult = result;
         this.gameResultStartedAt = new Date().getTime();
         audioManager.stop();
+        if (result === 'lost') {
+            audioManager.playLostSound();
+        } else if (result === 'won') {
+            audioManager.playWonSound();
+        }
         document.getElementById('restartButton').classList.remove('is-hidden');
     }
 
@@ -161,6 +166,9 @@ class World {
 
     defeatChicken(enemy) {
         enemy.hit(enemy.energy);
+        if (enemy instanceof ChickenSmall) {
+            audioManager.playSmallChickenHitSound();
+        }
         this.character.speedY = 18;
         this.removeChickenAfterDeath(enemy);
     }
@@ -193,9 +201,19 @@ class World {
                     this.removeChickenAfterDeath(enemy);
                 }
                 bottle.splash(enemy);
+                audioManager.playBottleBreakSound();
+                this.playBottleEnemyHitSound(enemy);
                 this.removeBottleAfterSplash(bottle);
                 break;
             }
+        }
+    }
+
+    playBottleEnemyHitSound(enemy) {
+        if (enemy instanceof ChickenSmall) {
+            audioManager.playSmallChickenHitSound();
+        } else if (enemy instanceof Chicken) {
+            audioManager.playNormalChickenHitSound();
         }
     }
 
@@ -243,6 +261,7 @@ class World {
         for (let i = this.level.bottles.length - 1; i >= 0; i--) {
             if (this.character.isColliding(this.level.bottles[i])) {
                 this.level.bottles.splice(i, 1);
+                audioManager.playBottleCollectSound();
                 this.bottlePercentage = Math.min(100, this.bottlePercentage + 20);
                 this.statusBarBottle.setPercentage(this.bottlePercentage);
             }

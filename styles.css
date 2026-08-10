@@ -259,6 +259,15 @@ canvas{
     letter-spacing: 0.5px;
 }
 
+.control-item .key-letter {
+    min-width: 34px;
+    width: 34px;
+    height: 32px;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 18px;
+}
+
 .restart-button {
     position: absolute;
     z-index: 15;
@@ -451,5 +460,46 @@ h1 {
         transform: translateY(3px);
         box-shadow: 0 1px 0 #7a2d0b;
         filter: brightness(1.15);
+    }
+}
+
+/* Compact controls for phones used in landscape mode. */
+@media only screen and (max-width: 1024px) and (max-height: 600px) and (pointer: coarse) {
+    .start-button-label {
+        padding: 6px 13px;
+        border-width: 2px;
+        border-radius: 9px;
+        box-shadow: 0 3px 0 #7a2d0b;
+        font-size: clamp(15px, 4.5dvh, 19px);
+    }
+
+    .screen-button {
+        width: clamp(34px, 10dvh, 42px);
+        height: clamp(34px, 10dvh, 42px);
+        padding: 7px;
+        border-width: 2px;
+        box-shadow: 0 3px 0 #7a2d0b;
+    }
+
+    .game-container.game-running .touch-controls {
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .touch-control-group {
+        gap: 7px;
+    }
+
+    .touch-button {
+        width: clamp(40px, 12dvh, 52px);
+        height: clamp(40px, 12dvh, 52px);
+        border-width: 2px;
+        box-shadow: 0 3px 0 #7a2d0b;
+        font-size: clamp(21px, 6dvh, 28px);
+    }
+
+    .touch-button-action {
+        font-size: clamp(10px, 3.2dvh, 14px);
     }
 }

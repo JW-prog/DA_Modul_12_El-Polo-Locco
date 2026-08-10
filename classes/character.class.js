@@ -136,9 +136,10 @@ class Character extends MovableObject {
 
             
 
-            if(this.world.keyboard.SPACE && !this.isAboveGround()) { // Jump only if character is on the ground
+            if(this.world.keyboard.SPACE && !this.isAboveGround() && !this.jumpStarted) { // Jump only if character is on the ground
                this.speedY = 30; // Set the vertical speed for jumping
                this.jumpStarted = true;
+               audioManager.playJumpSound();
             }
 
             this.world.camera_x = -this.x + 100; // Adjust camera position based on character's x position
