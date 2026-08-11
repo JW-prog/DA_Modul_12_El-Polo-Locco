@@ -3,6 +3,7 @@ class Character extends MovableObject {
     height = 280;
     width = 120;
     y = 100;
+    groundY = 190;
     energy = 200;
     maxEnergy = 200;
     damageCooldown = 500;
@@ -76,94 +77,168 @@ class Character extends MovableObject {
     jumpStarted = false;
 
 
+    /** Creates Pepe and loads all animations. */
     constructor() {
         super();
         this.loadImage('img/2_character_pepe/1_idle/long_idle/I-11.png');
-        this.loadImages(this.IMAGES_WALKING);
-        this.loadImages(this.IMAGES_JUMPING);
-        this.loadImages(this.IMAGES_DEAD);
-        this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_IDLE);
-        this.loadImages(this.IMAGES_SLEEPING);
-
-    
+        this.loadCharacterImages();
         this.applyGravity();
         this.x = 220;
     }
 
-    hit(damage = 2) {
-        super.hit(damage);
-        if (this.isDead()) {
-            this.startDeathAnimation();
-        }
+
+    /** Loads every character animation. @returns {void} */
+    loadCharacterImages() {
+        [this.IMAGES_WALKING, this.IMAGES_JUMPING, this.IMAGES_DEAD,
+            this.IMAGES_HURT, this.IMAGES_IDLE, this.IMAGES_SLEEPING]
+            .forEach((images) => this.loadImages(images));
     }
 
+
+    /** Starts Pepe's gravity loop. @returns {void} */
+    applyGravity() {
+        setInterval(() => this.updateCharacterGravity(), 1000 / 60);
+    }
+
+
+    /** Applies one gravity step and clamps the floor. @returns {void} */
+    updateCharacterGravity() {
+        if (!this.isAboveGround() && this.speedY <= 0) return;
+        this.y -= this.speedY / 2;
+        this.speedY -= this.acceleration / 2;
+        if (this.y > this.groundY) this.landOnGround();
+    }
+
+
+    /** Places Pepe exactly on the ground. @returns {void} */
+    landOnGround() {
+        this.y = this.groundY;
+        this.speedY = 0;
+    }
+
+
+    /** Checks whether Pepe is airborne. @returns {boolean} Airborne state. */
+    isAboveGround() {
+        return this.y < this.groundY;
+    }
+
+
+    /** Applies damage and selects the matching sound/state. @param {number} damage - Damage. @returns {void} */
+    hit(damage = 2) {
+        super.hit(damage);
+        if (this.isDead()) this.handleFatalHit();
+        else audioManager.playCharacterHitSound();
+    }
+
+
+    /** Handles Pepe's fatal hit. @returns {void} */
+    handleFatalHit() {
+        audioManager.stopCharacterHitSound();
+        this.startDeathAnimation();
+    }
+
+
+    /** Initializes Pepe's death animation once. @returns {void} */
     startDeathAnimation() {
-        if (this.deathAnimationStarted) {
-            return;
-        }
+        if (this.deathAnimationStarted) return;
         this.deathAnimationStarted = true;
         this.currentImage = 0;
         this.img = this.imageCache[this.IMAGES_DEAD[0]];
     }
 
 
-
+    /** Starts movement and animation loops. @returns {void} */
     animate() {
-
-        setInterval(() => {
-            if (this.isDead() || this.world.gameOver) {
-                audioManager.setWalkingSound(false);
-                return;
-            }
-
-            this.checkLanding();
-            this.updateWalkingSound();
-
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-                this.lastMovementTime = Date.now();
-            }
-
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX) {
-                this.x += this.speed;
-                this.otherDirection = false; // Character is facing right
-               
-            }
-            if (this.world.keyboard.LEFT && this.x > 120) {
-                this.x -= this.speed;
-                this.otherDirection = true; // Character is facing left
-            }
-
-            
-
-            if(this.world.keyboard.SPACE && !this.isAboveGround() && !this.jumpStarted) { // Jump only if character is on the ground
-               this.speedY = 30; // Set the vertical speed for jumping
-               this.jumpStarted = true;
-               audioManager.playJumpSound();
-            }
-
-            this.world.camera_x = -this.x + 100; // Adjust camera position based on character's x position
-        }, 1000 / 60);
-
-        setInterval(() => {
-
-            if (this.isDead()) {
-                this.startDeathAnimation();
-                this.playDeathAnimation();
-            } else if (this.isHurt()) {
-                this.playCharacterAnimation('hurt', this.IMAGES_HURT);
-            } else if (this.isAboveGround()) {
-                this.playCharacterAnimation('jumping', this.IMAGES_JUMPING);
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playCharacterAnimation('walking', this.IMAGES_WALKING);
-            } else if (Date.now() - this.lastMovementTime >= this.longIdleDelay) {
-                this.playCharacterAnimation('long_idle', this.IMAGES_SLEEPING);
-            } else {
-                this.playCharacterAnimation('idle', this.IMAGES_IDLE);
-            }
-        }, 80);
+        setInterval(() => this.updateMovement(), 1000 / 60);
+        setInterval(() => this.updateAnimation(), 80);
     }
 
+    /** Updates player movement for one frame. @returns {void} */
+    updateMovement() {
+        if (this.isDead() || this.world.gameOver) return audioManager.setWalkingSound(false);
+        this.checkLanding();
+        this.updateWalkingSound();
+        this.updateMovementTime();
+        this.moveFromInput();
+        this.jumpFromInput();
+        this.world.camera_x = -this.x + 100;
+    }
+
+
+    /** Records recent player input for idle animations. @returns {void} */
+    updateMovementTime() {
+        const input = this.world.keyboard;
+        if (input.RIGHT || input.LEFT || input.SPACE) this.lastMovementTime = Date.now();
+    }
+
+
+    /** Moves Pepe horizontally from keyboard input. @returns {void} */
+    moveFromInput() {
+        const input = this.world.keyboard;
+        if (input.RIGHT && this.x < this.world.level.levelEndX) this.moveCharacterRight();
+        if (input.LEFT && this.x > 120) this.moveCharacterLeft();
+    }
+
+
+    /** Moves Pepe right. @returns {void} */
+    moveCharacterRight() {
+        this.x += this.speed;
+        this.otherDirection = false;
+    }
+
+
+    /** Moves Pepe left. @returns {void} */
+    moveCharacterLeft() {
+        this.x -= this.speed;
+        this.otherDirection = true;
+    }
+
+
+    /** Starts a jump from keyboard input. @returns {void} */
+    jumpFromInput() {
+        if (!this.world.keyboard.SPACE || this.isAboveGround() || this.jumpStarted) return;
+        this.speedY = 30;
+        this.jumpStarted = true;
+        audioManager.playJumpSound();
+    }
+
+
+    /** Selects and advances Pepe's current animation. @returns {void} */
+    updateAnimation() {
+        if (this.isDead()) return this.updateDeathAnimation();
+        const animation = this.getCharacterAnimation();
+        this.playCharacterAnimation(animation.state, animation.images);
+    }
+
+
+    /** Returns the current living-character animation. @returns {Object} State and frames. */
+    getCharacterAnimation() {
+        if (this.isHurt()) return { state: 'hurt', images: this.IMAGES_HURT };
+        if (this.isAboveGround()) return { state: 'jumping', images: this.IMAGES_JUMPING };
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            return { state: 'walking', images: this.IMAGES_WALKING };
+        }
+        return this.getIdleAnimation();
+    }
+
+
+    /** Selects the short or long idle animation. @returns {Object} State and frames. */
+    getIdleAnimation() {
+        if (Date.now() - this.lastMovementTime >= this.longIdleDelay) {
+            return { state: 'long_idle', images: this.IMAGES_SLEEPING };
+        }
+        return { state: 'idle', images: this.IMAGES_IDLE };
+    }
+
+
+    /** Advances Pepe's death state. @returns {void} */
+    updateDeathAnimation() {
+        this.startDeathAnimation();
+        this.playDeathAnimation();
+    }
+
+
+    /** Detects a completed landing. @returns {void} */
     checkLanding() {
         const isInAir = this.isAboveGround();
         if (this.jumpStarted && this.wasInAir && !isInAir) {
@@ -173,11 +248,15 @@ class Character extends MovableObject {
         this.wasInAir = isInAir;
     }
 
+
+    /** Synchronizes the walking sound. @returns {void} */
     updateWalkingSound() {
         const isMoving = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
         audioManager.setWalkingSound(isMoving && !this.isAboveGround());
     }
 
+
+    /** Plays an animation and resets changed state. @param {string} state - State name. @param {string[]} images - Frames. @returns {void} */
     playCharacterAnimation(state, images) {
         if (this.animationState !== state) {
             this.animationState = state;
@@ -186,33 +265,20 @@ class Character extends MovableObject {
         this.playAnimation(images);
     }
 
-    playDeathAnimation() {
-        if (this.deathAnimationFinished) {
-            return;
-        }
 
-        let frameIndex = this.currentImage % this.IMAGES_DEAD.length;
+    /** Advances Pepe's finite death animation. @returns {void} */
+    playDeathAnimation() {
+        if (this.deathAnimationFinished) return;
+        const frameIndex = this.currentImage % this.IMAGES_DEAD.length;
         this.img = this.imageCache[this.IMAGES_DEAD[frameIndex]];
         this.currentImage++;
-
-        if (this.currentImage >= this.IMAGES_DEAD.length * 3) {
-            this.deathAnimationFinished = true;
-            setTimeout(() => this.isVisible = false, 50);
-        }
+        if (this.currentImage >= this.IMAGES_DEAD.length * 3) this.finishDeathAnimation();
     }
 
-    jump() {
-      console.log('Character is jumping');
-    }
 
-    gameOver() {
-    if (this.isDead() && !this.world.gameOver) {
-        this.playAnimationOnce(this.IMAGES_DEAD);
-
-        setTimeout(() => {
-            this.world.gameOver = true;
-            console.log('Game over');
-        }, 1000);
+    /** Completes Pepe's death animation. @returns {void} */
+    finishDeathAnimation() {
+        this.deathAnimationFinished = true;
+        setTimeout(() => this.isVisible = false, 50);
     }
-}
 }

@@ -14,50 +14,48 @@ class Chicken extends MovableObject {
         'img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
     
+    /** Creates a normal chicken. @param {number} x - Horizontal start position. */
     constructor(x) {
         super();
         this.loadImage('img\\3_enemies_chicken\\chicken_normal\\1_walk\\1_w.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_DEAD);
         this.x = x;
-        this.speed = 0.35 + Math.random() * 1.05; // Random speed between 0.35 and 1.4
+        this.speed = 0.35 + Math.random() * 1.05;
         this.animate();
     }
 
+
+    /** Starts movement and animation loops. @returns {void} */
     animate() {
-        setInterval(() => {
-            if (!this.world || this.isDead()) {
-                return;
-            }
-            this.activateNearCharacter();
-            if (this.isActivated) {
-                this.moveTowardsCharacter();
-            }
-        }, 1000 / 60);
-
-        setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-            } else {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-        }, 1000 / 10);
+        setInterval(() => this.updateMovement(), 1000 / 60);
+        setInterval(() => this.updateAnimation(), 1000 / 10);
     }
 
+
+    /** Updates movement for one frame. @returns {void} */
+    updateMovement() {
+        if (!this.world || this.isDead()) return;
+        this.activateNearCharacter();
+        if (this.isActivated) this.moveTowardsCharacter();
+    }
+
+
+    /** Updates the current animation. @returns {void} */
+    updateAnimation() {
+        this.playAnimation(this.isDead() ? this.IMAGES_DEAD : this.IMAGES_WALKING);
+    }
+
+
+    /** Activates the chicken near Pepe. @returns {void} */
     activateNearCharacter() {
-        if (Math.abs(this.x - this.world.character.x) <= 600) {
-            this.isActivated = true;
-        }
+        if (Math.abs(this.x - this.world.character.x) <= 600) this.isActivated = true;
     }
 
+
+    /** Moves toward Pepe. @returns {void} */
     moveTowardsCharacter() {
-        if (this.world.character.x < this.x) {
-            this.moveLeft();
-        } else {
-            this.moveRight();
-        }
+        if (this.world.character.x < this.x) this.moveLeft();
+        else this.moveRight();
     }
-
-
-
 }

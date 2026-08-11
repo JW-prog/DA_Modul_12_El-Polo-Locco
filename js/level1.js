@@ -1,86 +1,69 @@
+let level1;
 
-    let level1;
+/** Creates coins arranged as an arc. @param {number} startX - First X position. @param {number} baseY - Baseline. @param {number} count - Coin count. @param {number} spacing - Horizontal spacing. @param {number} arcHeight - Arc height. @returns {Coin[]} Coins. */
+function createCoinArc(startX, baseY, count = 5, spacing = 60, arcHeight = 130) {
+    return Array.from({ length: count }, (_, index) => {
+        const progress = index / (count - 1);
+        const y = baseY - 4 * arcHeight * progress * (1 - progress);
+        return new Coin(startX + index * spacing, y);
+    });
+}
 
-    function createCoinArc(startX, baseY, count = 5, spacing = 60, arcHeight = 130) {
-        let coins = [];
 
-        for (let i = 0; i < count; i++) {
-            let progress = i / (count - 1);
-            let y = baseY - 4 * arcHeight * progress * (1 - progress);
-            coins.push(new Coin(startX + i * spacing, y));
-        }
+/** Initializes the first level. @returns {void} */
+function initLevel1() {
+    level1 = new Level(createEnemies(), [new Cloud()], createBackgrounds(),
+        createBottles(), createCoins());
+}
 
-        return coins;
+
+/** Creates all level enemies. @returns {MovableObject[]} Enemies. */
+function createEnemies() {
+    const enemies = [];
+    [680, 760, 840, 1280, 1360, 1440, 1850, 1930, 2010]
+        .forEach((x) => enemies.push(new Chicken(x)));
+    [720, 800, 880, 1320, 1400, 1480, 1890, 1970, 2050]
+        .forEach((x) => enemies.push(new ChickenSmall(x)));
+    enemies.push(new Endboss());
+    return enemies;
+}
+
+
+/** Creates all scrolling background layers. @returns {BackgroundObject[]} Backgrounds. */
+function createBackgrounds() {
+    const backgrounds = [];
+    for (let section = 0; section < 4; section++) {
+        backgrounds.push(...createBackgroundSection(section));
     }
+    return backgrounds;
+}
 
-    function initLevel1() {
-        level1 = new Level([
-        new Chicken(680),
-        new Chicken(760),
-        new Chicken(840),
-        new ChickenSmall(720),
-        new ChickenSmall(800),
-        new ChickenSmall(880),
-        new Chicken(1280),
-        new Chicken(1360),
-        new Chicken(1440),
-        new ChickenSmall(1320),
-        new ChickenSmall(1400),
-        new ChickenSmall(1480),
-        new Chicken(1850),
-        new Chicken(1930),
-        new Chicken(2010),
-        new ChickenSmall(1890),
-        new ChickenSmall(1970),
-        new ChickenSmall(2050),
-        new Endboss(),
 
-    ],
-    [
-        new Cloud(),
-    ],
-    [
-        new BackgroundObject('img\\5_background\\layers\\air.png',0,0),
-        new BackgroundObject('img\\5_background\\layers\\3_third_layer\\1.png',0,50),
-        new BackgroundObject('img\\5_background\\layers\\2_second_layer\\1.png',0,50),
-        new BackgroundObject('img\\5_background\\layers\\1_first_layer\\1.png',0,50),
-        new BackgroundObject('img\\5_background\\layers\\air.png',719,0),
-        new BackgroundObject('img\\5_background\\layers\\3_third_layer\\2.png',719,50),
-        new BackgroundObject('img\\5_background\\layers\\2_second_layer\\2.png',719,50),
-        new BackgroundObject('img\\5_background\\layers\\1_first_layer\\2.png',719,50),
-        new BackgroundObject('img\\5_background\\layers\\air.png',719*2,0),
-        new BackgroundObject('img\\5_background\\layers\\3_third_layer\\1.png',719*2,50),
-        new BackgroundObject('img\\5_background\\layers\\2_second_layer\\1.png',719*2,50),
-        new BackgroundObject('img\\5_background\\layers\\1_first_layer\\1.png',719*2,50),
-        new BackgroundObject('img\\5_background\\layers\\air.png',719*3,0),
-        new BackgroundObject('img\\5_background\\layers\\3_third_layer\\2.png',719*3,50),
-        new BackgroundObject('img\\5_background\\layers\\2_second_layer\\2.png',719*3,50),
-        new BackgroundObject('img\\5_background\\layers\\1_first_layer\\2.png',719*3,50),
-    ],
-    [
-        new Bottle(280, 500),
-        new Bottle(380, 500),
-        new Bottle(450, 400),
-        new Bottle(580, 400),
-        new Bottle(700, 400),
-        new Bottle(760, 420),
-        new Bottle(850, 420),
-        new Bottle(1050, 420),
-        new Bottle(1120, 420),
-        new Bottle(1250, 420),
-        new Bottle(1420, 420),
-        new Bottle(1500, 420),
-        new Bottle(1650, 420),
-        new Bottle(1850, 420),
-        new Bottle(1920, 420),
-        new Bottle(2050, 420)
-    ],
-    [
-        ...createCoinArc(400, 330, 5, 60, 130),
+/** Creates one background section. @param {number} section - Section index. @returns {BackgroundObject[]} Layers. */
+function createBackgroundSection(section) {
+    const variant = section % 2 + 1;
+    const x = 719 * section;
+    return [new BackgroundObject('img/5_background/layers/air.png', x, 0),
+        new BackgroundObject(`img/5_background/layers/3_third_layer/${variant}.png`, x, 50),
+        new BackgroundObject(`img/5_background/layers/2_second_layer/${variant}.png`, x, 50),
+        new BackgroundObject(`img/5_background/layers/1_first_layer/${variant}.png`, x, 50)];
+}
+
+
+/** Creates all collectible bottles. @returns {Bottle[]} Bottles. */
+function createBottles() {
+    const positions = [[280, 500], [380, 500], [450, 400], [580, 400], [700, 400],
+        [760, 420], [850, 420], [1050, 420], [1120, 420], [1250, 420],
+        [1420, 420], [1500, 420], [1650, 420], [1850, 420], [1920, 420], [2050, 420]];
+    return positions.map(([x, y]) => new Bottle(x, y));
+}
+
+
+/** Creates all collectible coin arcs. @returns {Coin[]} Coins. */
+function createCoins() {
+    return [...createCoinArc(400, 330, 5, 60, 130),
         ...createCoinArc(650, 310, 5, 60, 110),
         ...createCoinArc(1060, 340, 5, 60, 150),
         ...createCoinArc(1470, 310, 5, 60, 110),
-        ...createCoinArc(1850, 340, 5, 60, 140)
-    ]
-);
+        ...createCoinArc(1850, 340, 5, 60, 140)];
 }

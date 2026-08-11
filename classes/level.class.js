@@ -1,16 +1,11 @@
-
 class Level {
-    enemies;
-    clouds;
-    backgroundObjects;
-    bottles;
-    coins;
-    levelEndX = 2200; // Set the level end position to the right edge of the last background object
+    levelEndX = 2200;
 
-    constructor(enemies, clouds, backgroundObjects, bottles = [], coins = []) {
+    /** Creates a level. @param {MovableObject[]} enemies - Enemies. @param {Cloud[]} clouds - Clouds. @param {BackgroundObject[]} backgrounds - Backgrounds. @param {Bottle[]} bottles - Bottles. @param {Coin[]} coins - Coins. */
+    constructor(enemies, clouds, backgrounds, bottles = [], coins = []) {
         this.enemies = enemies;
         this.clouds = clouds;
-        this.backgroundObjects = backgroundObjects;
+        this.backgroundObjects = backgrounds;
         this.bottles = bottles;
         this.coins = coins;
     }

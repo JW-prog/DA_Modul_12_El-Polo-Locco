@@ -19,6 +19,7 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
 
+    /** Creates and throws a salsa bottle. @param {number} x - X position. @param {number} y - Y position. @param {boolean} otherDirection - Left-facing state. */
     constructor(x, y, otherDirection = false) {
         super();
         this.loadImage(this.IMAGES_ROTATION[0]);
@@ -29,22 +30,26 @@ class ThrowableObject extends MovableObject {
         this.width = 50;
         this.height = 50;
         this.otherDirection = otherDirection;
-        this.throw(100, 100);
+        this.throw();
     }
 
+
+    /** Starts flight movement and rotation. @returns {void} */
     throw() {
         this.speedY = 24;
         this.applyGravity();
-
-        this.movementInterval = setInterval(() => {
-            this.x += this.otherDirection ? -10 : 10;
-        }, 1000 / 40);
-
-        this.rotationInterval = setInterval(() => {
-            this.playAnimation(this.IMAGES_ROTATION);
-        }, 100);
+        this.movementInterval = setInterval(() => this.moveInThrowDirection(), 1000 / 40);
+        this.rotationInterval = setInterval(() => this.playAnimation(this.IMAGES_ROTATION), 100);
     }
 
+
+    /** Moves the bottle in its throw direction. @returns {void} */
+    moveInThrowDirection() {
+        this.x += this.otherDirection ? -10 : 10;
+    }
+
+
+    /** Starts bottle gravity. @returns {void} */
     applyGravity() {
         this.gravityInterval = setInterval(() => {
             if (!this.hasHit) {
@@ -54,12 +59,12 @@ class ThrowableObject extends MovableObject {
         }, 1000 / 30);
     }
 
+
+    /** Converts the bottle to a splash at an enemy. @param {MovableObject} enemy - Hit enemy. @returns {void} */
     splash(enemy) {
         this.hasHit = true;
         this.speedY = 0;
-        clearInterval(this.gravityInterval);
-        clearInterval(this.movementInterval);
-        clearInterval(this.rotationInterval);
+        this.stopFlightIntervals();
         this.width = 90;
         this.height = 90;
         this.x = enemy.x + (enemy.width - this.width) / 2;
@@ -67,6 +72,28 @@ class ThrowableObject extends MovableObject {
         this.img = this.imageCache[this.IMAGES_SPLASH[1]];
     }
 
+
+    /** Converts a missed bottle to a splash on the ground. @param {number} groundY - Ground line. @returns {void} */
+    splashOnGround(groundY) {
+        this.hasHit = true;
+        this.speedY = 0;
+        this.stopFlightIntervals();
+        this.width = 90;
+        this.height = 90;
+        this.y = groundY - this.height;
+        this.img = this.imageCache[this.IMAGES_SPLASH[1]];
+    }
+
+
+    /** Stops every flight interval. @returns {void} */
+    stopFlightIntervals() {
+        clearInterval(this.gravityInterval);
+        clearInterval(this.movementInterval);
+        clearInterval(this.rotationInterval);
+    }
+
+
+    /** Marks thrown bottles as airborne. @returns {boolean} Always true. */
     isAboveGround() {
         return true;
     }

@@ -6,7 +6,6 @@ class StatusBarCoin extends DrawableObject {
     y = 120;
     width = 200;
     height = 60;
-
     IMAGES_COIN = [
         'img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
         'img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png',
@@ -16,31 +15,32 @@ class StatusBarCoin extends DrawableObject {
         'img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png'
     ];
 
-
+    /** Creates the coin progress bar. */
     constructor() {
         super();
         this.loadImages(this.IMAGES_COIN);
         this.setPercentage(0);
     }
 
+
+    /** Updates the coin percentage. @param {number} percentage - Coin percentage. @returns {void} */
     setPercentage(percentage) {
         this.percentage = Math.max(0, Math.min(100, percentage));
-        let path = this.IMAGES_COIN[this.resolveImageIndex()];
-        this.img = this.imageCache[path];
+        this.img = this.imageCache[this.IMAGES_COIN[this.resolveImageIndex()]];
     }
 
-    setProgress(collectedCoins, totalCoins) {
-        this.collectedCoins = collectedCoins;
-        this.totalCoins = totalCoins;
-        let percentage = totalCoins > 0 ? (collectedCoins / totalCoins) * 100 : 0;
-        this.setPercentage(percentage);
+
+    /** Updates collected coin progress. @param {number} collected - Collected coins. @param {number} total - Total coins. @returns {void} */
+    setProgress(collected, total) {
+        this.collectedCoins = collected;
+        this.totalCoins = total;
+        this.setPercentage(total > 0 ? collected / total * 100 : 0);
     }
 
+
+    /** Maps coin progress to an image index. @returns {number} Image index. */
     resolveImageIndex() {
-        if (this.percentage <= 0) {
-            return 0;
-        }
+        if (this.percentage <= 0) return 0;
         return Math.min(5, Math.ceil(this.percentage / 20));
     }
-
 }
