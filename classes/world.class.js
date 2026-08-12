@@ -69,7 +69,7 @@ class World {
 
     /** Runs one complete collision update. @returns {void} */
     checkCollisions() {
-        if (this.gameOver) return;
+        if (this.gameOver || isGamePaused()) return;
         this.checkEnemyCollisions();
         this.checkBottleHitsOnEnemies();
         this.checkMissedBottles();
@@ -111,6 +111,7 @@ class World {
         this.setGameResult(result);
         audioManager.stop();
         this.playResultSound(result);
+        document.getElementById('pauseButton').classList.add('is-hidden');
         document.getElementById('restartButton').classList.remove('is-hidden');
     }
 
@@ -338,6 +339,7 @@ class World {
 
     /** Processes one throw input. @returns {void} */
     checkThrowInput() {
+        if (isGamePaused()) return;
         if (!this.gameOver && this.keyboard.THROW && this.bottlePercentage > 0) this.throwBottle();
         this.keyboard.THROW = false;
     }

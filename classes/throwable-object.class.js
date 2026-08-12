@@ -45,6 +45,7 @@ class ThrowableObject extends MovableObject {
 
     /** Moves the bottle in its throw direction. @returns {void} */
     moveInThrowDirection() {
+        if (isGamePaused()) return;
         this.x += this.otherDirection ? -10 : 10;
     }
 
@@ -52,6 +53,7 @@ class ThrowableObject extends MovableObject {
     /** Starts bottle gravity. @returns {void} */
     applyGravity() {
         this.gravityInterval = setInterval(() => {
+            if (isGamePaused()) return;
             if (!this.hasHit) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;

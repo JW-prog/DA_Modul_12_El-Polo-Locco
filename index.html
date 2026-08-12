@@ -75,6 +75,9 @@
         <button id="soundButton" class="sound-button" type="button" onclick="toggleSound()" aria-label="Ton ausschalten" title="Ton ausschalten">
             <span aria-hidden="true">&#128266;</span>
         </button>
+        <button id="pauseButton" class="pause-button is-hidden" type="button" onclick="togglePause()" aria-label="Spiel pausieren" title="Spiel pausieren">
+            <span aria-hidden="true">&#10074;&#10074;</span>
+        </button>
         <div class="touch-controls" aria-label="Touch-Steuerung">
             <div class="touch-control-group">
                 <button class="touch-button" type="button" data-key="LEFT" aria-label="Nach links bewegen">&larr;</button>
@@ -117,6 +120,13 @@
                 <p><strong>Kontakt</strong><br>
                     E-Mail: <a href="mailto:max.mustermann@example.com">max.mustermann@example.com</a>
                 </p>
+            </div>
+        </div>
+        <div id="pauseOverlay" class="pause-overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+            <div class="pause-card">
+                <h2 id="pauseTitle">Spiel pausiert</h2>
+                <button type="button" onclick="togglePause()">Weiter</button>
+                <button type="button" onclick="reloadGame()">Neu starten</button>
             </div>
         </div>
         <button id="restartButton" class="restart-button is-hidden" type="button" onclick="reloadGame()">

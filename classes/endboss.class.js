@@ -81,6 +81,7 @@ class Endboss extends MovableObject {
 
     /** Advances the current endboss animation. @returns {void} */
     updateAnimation() {
+        if (isGamePaused()) return;
         const animation = this.getCurrentAnimation();
         if (this.isDead()) this.playDeathAnimation(animation);
         else this.playAnimation(animation);
@@ -121,6 +122,7 @@ class Endboss extends MovableObject {
 
     /** Updates movement and attacks for one frame. @returns {void} */
     updateMovement() {
+        if (isGamePaused()) return;
         if (!this.canMove()) return;
         if (!this.activateOnSight()) return;
         const character = this.world.character;

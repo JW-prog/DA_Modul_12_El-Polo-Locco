@@ -35,7 +35,7 @@ class Chicken extends MovableObject {
 
     /** Updates movement for one frame. @returns {void} */
     updateMovement() {
-        if (!this.world || this.isDead()) return;
+        if (!this.world || this.isDead() || isGamePaused()) return;
         this.activateNearCharacter();
         if (this.isActivated) this.moveTowardsCharacter();
     }
@@ -43,6 +43,7 @@ class Chicken extends MovableObject {
 
     /** Updates the current animation. @returns {void} */
     updateAnimation() {
+        if (isGamePaused()) return;
         this.playAnimation(this.isDead() ? this.IMAGES_DEAD : this.IMAGES_WALKING);
     }
 

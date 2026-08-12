@@ -18,6 +18,71 @@
     cursor: pointer;
 }
 
+.pause-button {
+    position: absolute;
+    z-index: 7;
+    top: 10px;
+    right: auto;
+    left: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid #7a2d0b;
+    border-radius: 50%;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 2px 0 #7a2d0b;
+    color: #7a2d0b;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.pause-overlay {
+    position: absolute;
+    z-index: 12;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(38, 13, 3, 0.72);
+    backdrop-filter: blur(3px);
+}
+
+.pause-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 220px;
+    padding: 24px;
+    border: 3px solid #f5d207;
+    border-radius: 18px;
+    background: linear-gradient(#662a0a, #361405);
+    color: #f5d207;
+    font-family: 'Sancreek', cursive;
+    text-align: center;
+}
+
+.pause-card h2 { margin: 0 0 8px; }
+
+.pause-card button {
+    padding: 8px 16px;
+    border: 2px solid #7a2d0b;
+    border-radius: 9px;
+    background: linear-gradient(#ffd438, #ff9d00);
+    color: #612207;
+    font: inherit;
+    cursor: pointer;
+}
+
+.pause-button:hover,
+.pause-card button:hover { filter: brightness(1.1); }
+
+.pause-button.is-hidden,
+.pause-overlay.is-hidden { display: none; }
+
 .start-options {
     position: static;
     display: block;
@@ -92,12 +157,12 @@
 
 .game-container.game-running .sound-button {
     top: 10px;
-    right: 10px;
+    right: auto;
     bottom: auto;
-    left: auto;
-    width: 34px;
-    height: 34px;
-    font-size: 17px;
+    left: calc(50% + 38px);
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
 }
 
 .game-overlay {
@@ -171,9 +236,9 @@
 }
 
 .start-button-label {
-    padding: 8px 17px;
+    padding: 5px 3px;
     border-width: 2px;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .sound-button:hover {
@@ -229,7 +294,7 @@
     }
 
     .game-container.game-running .sound-button {
-        left: auto;
+        left: calc(50% + 38px);
     }
 
     .imprint-icon-button span {

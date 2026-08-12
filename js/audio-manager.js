@@ -85,6 +85,22 @@ class AudioManager {
     }
 
 
+    /** Pauses sounds and remembers which ones were playing. @returns {void} */
+    pauseGameAudio() {
+        this.pausedSounds = this.getAllSounds().filter((sound) => !sound.paused);
+        this.pausedSounds.forEach((sound) => sound.pause());
+    }
+
+
+    /** Resumes sounds which were active before pausing. @returns {void} */
+    resumeGameAudio() {
+        (this.pausedSounds || []).forEach((sound) => {
+            sound.play().catch((error) => console.warn('Ein pausierter Sound konnte nicht fortgesetzt werden:', error));
+        });
+        this.pausedSounds = [];
+    }
+
+
     /** Plays a sound from its beginning. @param {HTMLAudioElement} sound - Sound. @param {string} label - Warning label. @returns {void} */
     playSound(sound, label) {
         sound.currentTime = 0;

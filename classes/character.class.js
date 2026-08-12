@@ -103,6 +103,7 @@ class Character extends MovableObject {
 
     /** Applies one gravity step and clamps the floor. @returns {void} */
     updateCharacterGravity() {
+        if (isGamePaused()) return;
         if (!this.isAboveGround() && this.speedY <= 0) return;
         this.y -= this.speedY / 2;
         this.speedY -= this.acceleration / 2;
@@ -155,6 +156,7 @@ class Character extends MovableObject {
 
     /** Updates player movement for one frame. @returns {void} */
     updateMovement() {
+        if (isGamePaused()) return audioManager.setWalkingSound(false);
         if (this.isDead() || this.world.gameOver) return audioManager.setWalkingSound(false);
         this.checkLanding();
         this.updateWalkingSound();
@@ -205,6 +207,7 @@ class Character extends MovableObject {
 
     /** Selects and advances Pepe's current animation. @returns {void} */
     updateAnimation() {
+        if (isGamePaused()) return;
         if (this.isDead()) return this.updateDeathAnimation();
         const animation = this.getCharacterAnimation();
         this.playCharacterAnimation(animation.state, animation.images);

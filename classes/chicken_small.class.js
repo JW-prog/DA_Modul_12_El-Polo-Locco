@@ -39,6 +39,7 @@ class ChickenSmall extends MovableObject {
 
     /** Starts a jump when the chicken is ready. @returns {void} */
     jumpWhenReady() {
+        if (isGamePaused()) return;
         if (this.isActivated && !this.isDead() && !this.isAboveGround()) this.speedY = 25;
     }
 
@@ -51,6 +52,7 @@ class ChickenSmall extends MovableObject {
 
     /** Applies one gravity step. @returns {void} */
     updateChickenGravity() {
+        if (isGamePaused()) return;
         if (!this.isAboveGround() && this.speedY <= 0) return;
         this.y -= this.speedY / 2;
         this.speedY -= this.acceleration / 2;
@@ -80,7 +82,7 @@ class ChickenSmall extends MovableObject {
 
     /** Updates movement for one frame. @returns {void} */
     updateMovement() {
-        if (!this.world || this.isDead()) return;
+        if (!this.world || this.isDead() || isGamePaused()) return;
         this.activateNearCharacter();
         if (this.isActivated) this.moveTowardsCharacter();
     }
@@ -88,6 +90,7 @@ class ChickenSmall extends MovableObject {
 
     /** Updates the current animation. @returns {void} */
     updateAnimation() {
+        if (isGamePaused()) return;
         this.playAnimation(this.isDead() ? this.IMAGES_DEAD : this.IMAGES_WALKING);
     }
 

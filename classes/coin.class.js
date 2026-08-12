@@ -22,6 +22,7 @@ class Coin extends DrawableObject {
 
     /** Advances the coin animation. @returns {void} */
     playNextCoinFrame() {
+        if (isGamePaused()) return;
         const path = this.IMAGES_COIN[this.currentImage % this.IMAGES_COIN.length];
         this.img = this.imageCache[path];
         this.currentImage++;

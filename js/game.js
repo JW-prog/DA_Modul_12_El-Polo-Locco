@@ -1,6 +1,12 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let gamePaused = false;
+
+/** Returns whether gameplay updates are currently paused. @returns {boolean} */
+function isGamePaused() {
+    return gamePaused;
+}
 
 /** Initializes the start screen and controls. @returns {void} */
 function initGame() {
@@ -75,7 +81,37 @@ function showRunningState() {
     document.getElementById('startButton').classList.add('is-hidden');
     document.getElementById('startOptions').classList.add('is-hidden');
     document.getElementById('fullscreen').classList.add('game-running');
+    document.getElementById('pauseButton').classList.remove('is-hidden');
     updateSoundButton();
+}
+
+
+/** Pauses or resumes the running game. @returns {void} */
+function togglePause() {
+    if (!world || world.gameOver) return;
+    gamePaused = !gamePaused;
+    clearGameInput();
+    document.getElementById('pauseOverlay').classList.toggle('is-hidden', !gamePaused);
+    updatePauseButton();
+    if (gamePaused) audioManager.pauseGameAudio();
+    else audioManager.resumeGameAudio();
+}
+
+
+/** Releases all controls so no input remains active after pausing. @returns {void} */
+function clearGameInput() {
+    ['LEFT', 'RIGHT', 'UP', 'DOWN', 'SPACE', 'D', 'THROW'].forEach((key) => keyboard[key] = false);
+    document.querySelectorAll('.touch-button').forEach((button) => button.classList.remove('is-pressed'));
+}
+
+
+/** Updates icon and accessible text of the pause control. @returns {void} */
+function updatePauseButton() {
+    const button = document.getElementById('pauseButton');
+    const label = gamePaused ? 'Spiel fortsetzen' : 'Spiel pausieren';
+    button.querySelector('span').textContent = gamePaused ? '\u25B6' : '\u275A\u275A';
+    button.setAttribute('aria-label', label);
+    button.title = label;
 }
 
 
@@ -193,6 +229,7 @@ function reloadGame() {
 
 /** Handles pressed game keys. @param {KeyboardEvent} event - Key event. @returns {void} */
 function handleKeyDown(event) {
+    if (gamePaused) return;
     preventGameKeyScrolling(event);
     const key = mapGameKey(event.code);
     if (!key) return;
