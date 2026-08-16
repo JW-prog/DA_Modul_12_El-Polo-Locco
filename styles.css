@@ -103,6 +103,7 @@ canvas{
 
 .screen-button-right {
     right: 8%;
+    display: none;
 }
 
 .screen-button svg {
@@ -136,7 +137,7 @@ canvas{
 }
 
 .game-container.game-running .screen-button-left {
-    left: calc(50% - 76px);
+    left: calc(50% - 38px);
 }
 
 .game-container.game-running .screen-button-right {
@@ -161,6 +162,14 @@ canvas{
 .game-container:fullscreen canvas {
     width: min(100vw, 150vh);
     height: min(100vh, 66.6667vw);
+}
+
+.game-container:fullscreen .screen-button-left {
+    display: none;
+}
+
+.game-container:fullscreen .screen-button-right {
+    display: block;
 }
 
 .game-container.game-running:fullscreen .touch-controls {
@@ -341,7 +350,7 @@ h1 {
     }
 }
 
-@media only screen and (max-width: 600px) and (orientation: portrait) {
+@media only screen and (max-width: 710px) and (orientation: portrait) {
     .orientation-warning {
         position: fixed;
         z-index: 1000;
@@ -389,6 +398,7 @@ h1 {
     }
 }
 
+/* Use the mobile game layout, including its controls, on notebooks as well. */
 @media only screen and (max-width: 1024px) {
     html,
     body {
@@ -427,9 +437,9 @@ h1 {
         inset: 0;
         display: flex;
         align-items: flex-end;
-        justify-content: center;
-        gap: 6px;
-        padding: 8px;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px;
         box-sizing: border-box;
         pointer-events: none;
     }
@@ -437,7 +447,7 @@ h1 {
     .touch-control-group {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 8px;
         flex-wrap: nowrap;
         pointer-events: auto;
     }
@@ -446,8 +456,8 @@ h1 {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: clamp(26px, 4.3vw, 34px);
-        height: clamp(26px, 4.3vw, 34px);
+        width: clamp(30px, 5vw, 40px);
+        height: clamp(30px, 5vw, 40px);
         padding: 0;
         border: 2px solid #7a2d0b;
         border-radius: 50%;
@@ -455,7 +465,7 @@ h1 {
         box-shadow: 0 3px 0 #7a2d0b;
         color: #612207;
         font-family: Arial, sans-serif;
-        font-size: clamp(14px, 2.2vw, 18px);
+        font-size: clamp(16px, 2.5vw, 20px);
         font-weight: 800;
         line-height: 1;
         touch-action: none;
@@ -465,7 +475,7 @@ h1 {
 
     .touch-button-action {
         font-family: 'Sancreek', cursive;
-        font-size: clamp(6px, 1vw, 8px);
+        font-size: clamp(7px, 1.2vw, 10px);
     }
 
     .touch-button.is-pressed {
@@ -475,8 +485,8 @@ h1 {
     }
 }
 
-/* Compact controls for phones used in landscape mode. */
-@media only screen and (max-width: 1024px) and (max-height: 600px) and (pointer: coarse) {
+/* Compact controls on low screens, including notebooks and landscape phones. */
+@media only screen and (max-width: 1024px) and (max-height: 600px) {
     .start-button-label {
         padding: 4px 10px;
         border-width: 2px;
@@ -494,23 +504,23 @@ h1 {
     }
 
     .game-container.game-running .touch-controls {
-        gap: 4px;
-        padding: 6px;
+        gap: 8px;
+        padding: 8px;
     }
 
     .touch-control-group {
-        gap: 3px;
+        gap: 20px;
     }
 
     .touch-button {
-        width: clamp(24px, 7dvh, 31px);
-        height: clamp(24px, 7dvh, 31px);
+        width: clamp(27px, 8dvh, 35px);
+        height: clamp(27px, 8dvh, 35px);
         border-width: 2px;
         box-shadow: 0 3px 0 #7a2d0b;
-        font-size: clamp(13px, 3.5dvh, 16px);
+        font-size: clamp(14px, 4dvh, 18px);
     }
 
     .touch-button-action {
-        font-size: clamp(6px, 1.9dvh, 8px);
+        font-size: clamp(7px, 2.2dvh, 9px);
     }
 }

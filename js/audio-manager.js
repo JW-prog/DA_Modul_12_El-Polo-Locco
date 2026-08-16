@@ -201,6 +201,14 @@ class AudioManager {
         this.setWalkingSound(false);
         this.stopEndbossSound();
     }
+
+
+    /** Stops and rewinds all audio before a new game round. @returns {void} */
+    reset() {
+        this.getAllSounds().forEach((sound) => this.stopSound(sound));
+        this.isWalkingSoundActive = false;
+        this.pausedSounds = [];
+    }
 }
 
 const audioManager = new AudioManager();

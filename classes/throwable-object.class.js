@@ -38,8 +38,8 @@ class ThrowableObject extends MovableObject {
     throw() {
         this.speedY = 24;
         this.applyGravity();
-        this.movementInterval = setInterval(() => this.moveInThrowDirection(), 1000 / 40);
-        this.rotationInterval = setInterval(() => this.playAnimation(this.IMAGES_ROTATION), 100);
+        this.movementInterval = registerGameInterval(() => this.moveInThrowDirection(), 1000 / 40);
+        this.rotationInterval = registerGameInterval(() => this.playAnimation(this.IMAGES_ROTATION), 100);
     }
 
 
@@ -52,7 +52,7 @@ class ThrowableObject extends MovableObject {
 
     /** Starts bottle gravity. @returns {void} */
     applyGravity() {
-        this.gravityInterval = setInterval(() => {
+        this.gravityInterval = registerGameInterval(() => {
             if (isGamePaused()) return;
             if (!this.hasHit) {
                 this.y -= this.speedY;

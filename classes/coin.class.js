@@ -16,7 +16,7 @@ class Coin extends DrawableObject {
 
     /** Starts the coin animation loop. @returns {void} */
     animate() {
-        setInterval(() => this.playNextCoinFrame(), 300);
+        registerGameInterval(() => this.playNextCoinFrame(), 300);
     }
 
 

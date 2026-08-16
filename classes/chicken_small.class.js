@@ -33,20 +33,21 @@ class ChickenSmall extends MovableObject {
     /** Starts randomized recurring jumps. @returns {void} */
     startJumping() {
         const interval = 1800 + Math.random() * 1400;
-        this.jumpInterval = setInterval(() => this.jumpWhenReady(), interval);
+        this.jumpInterval = registerGameInterval(() => this.jumpWhenReady(), interval);
     }
 
 
     /** Starts a jump when the chicken is ready. @returns {void} */
     jumpWhenReady() {
         if (isGamePaused()) return;
-        if (this.isActivated && !this.isDead() && !this.isAboveGround()) this.speedY = 25;
+        if (this.isActivated && !this.isDead() && !this.isAboveGround() &&
+            !this.isTouchingCharacter()) this.speedY = 25;
     }
 
 
     /** Starts the small chicken's gravity loop. @returns {void} */
     applyGravity() {
-        setInterval(() => this.updateChickenGravity(), 1000 / 60);
+        registerGameInterval(() => this.updateChickenGravity(), 1000 / 60);
     }
 
 
@@ -75,8 +76,8 @@ class ChickenSmall extends MovableObject {
 
     /** Starts movement and animation loops. @returns {void} */
     animate() {
-        setInterval(() => this.updateMovement(), 1000 / 60);
-        setInterval(() => this.updateAnimation(), 1000 / 10);
+        registerGameInterval(() => this.updateMovement(), 1000 / 60);
+        registerGameInterval(() => this.updateAnimation(), 1000 / 10);
     }
 
 
@@ -84,14 +85,21 @@ class ChickenSmall extends MovableObject {
     updateMovement() {
         if (!this.world || this.isDead() || isGamePaused()) return;
         this.activateNearCharacter();
-        if (this.isActivated) this.moveTowardsCharacter();
+        if (this.isActivated && !this.isTouchingCharacter()) this.moveTowardsCharacter();
     }
 
 
     /** Updates the current animation. @returns {void} */
     updateAnimation() {
         if (isGamePaused()) return;
-        this.playAnimation(this.isDead() ? this.IMAGES_DEAD : this.IMAGES_WALKING);
+        if (this.isDead()) this.playAnimation(this.IMAGES_DEAD);
+        else if (!this.isTouchingCharacter()) this.playAnimation(this.IMAGES_WALKING);
+    }
+
+
+    /** Checks whether this chicken currently touches Pepe. @returns {boolean} Contact state. */
+    isTouchingCharacter() {
+        return Boolean(this.world && this.world.isCharacterTouchingEnemy(this));
     }
 
 
@@ -103,7 +111,11 @@ class ChickenSmall extends MovableObject {
 
     /** Moves toward Pepe. @returns {void} */
     moveTowardsCharacter() {
-        if (this.world.character.x < this.x) this.moveLeft();
+        const chickenCenter = this.x + this.width / 2;
+        const characterCenter = this.world.character.x + this.world.character.width / 2;
+        const distance = characterCenter - chickenCenter;
+        if (Math.abs(distance) <= this.speed) return;
+        if (distance < 0) this.moveLeft();
         else this.moveRight();
     }
 }

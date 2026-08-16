@@ -10,7 +10,7 @@ class MovableObject extends DrawableObject {
 
     /** Starts the object's gravity loop. @returns {void} */
     applyGravity() {
-        setInterval(() => this.updateGravity(), 1000 / 60);
+        registerGameInterval(() => this.updateGravity(), 1000 / 60);
     }
 
 

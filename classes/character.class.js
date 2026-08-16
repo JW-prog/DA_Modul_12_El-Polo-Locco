@@ -4,8 +4,8 @@ class Character extends MovableObject {
     width = 120;
     y = 100;
     groundY = 190;
-    energy = 200;
-    maxEnergy = 200;
+    energy = 100;
+    maxEnergy = 100;
     damageCooldown = 500;
      IMAGES_WALKING = [
         'img/2_character_pepe/2_walk/W-21.png',
@@ -97,7 +97,7 @@ class Character extends MovableObject {
 
     /** Starts Pepe's gravity loop. @returns {void} */
     applyGravity() {
-        setInterval(() => this.updateCharacterGravity(), 1000 / 60);
+        registerGameInterval(() => this.updateCharacterGravity(), 1000 / 60);
     }
 
 
@@ -126,15 +126,24 @@ class Character extends MovableObject {
 
     /** Applies damage and selects the matching sound/state. @param {number} damage - Damage. @returns {void} */
     hit(damage = 2) {
+        this.wakeUp();
         super.hit(damage);
         if (this.isDead()) this.handleFatalHit();
         else audioManager.playCharacterHitSound();
     }
 
 
+    /** Resets Pepe's inactivity timer so sleeping ends immediately. @returns {void} */
+    wakeUp() {
+        this.lastMovementTime = Date.now();
+        if (this.animationState === 'long_idle') this.animationState = '';
+    }
+
+
     /** Handles Pepe's fatal hit. @returns {void} */
     handleFatalHit() {
         audioManager.stopCharacterHitSound();
+        audioManager.setWalkingSound(false);
         this.startDeathAnimation();
     }
 
@@ -143,15 +152,16 @@ class Character extends MovableObject {
     startDeathAnimation() {
         if (this.deathAnimationStarted) return;
         this.deathAnimationStarted = true;
+        this.animationState = 'dead';
         this.currentImage = 0;
-        this.img = this.imageCache[this.IMAGES_DEAD[0]];
+        this.playDeathAnimation();
     }
 
 
     /** Starts movement and animation loops. @returns {void} */
     animate() {
-        setInterval(() => this.updateMovement(), 1000 / 60);
-        setInterval(() => this.updateAnimation(), 80);
+        registerGameInterval(() => this.updateMovement(), 1000 / 60);
+        registerGameInterval(() => this.updateAnimation(), 80);
     }
 
     /** Updates player movement for one frame. @returns {void} */
@@ -236,8 +246,8 @@ class Character extends MovableObject {
 
     /** Advances Pepe's death state. @returns {void} */
     updateDeathAnimation() {
-        this.startDeathAnimation();
-        this.playDeathAnimation();
+        if (!this.deathAnimationStarted) this.startDeathAnimation();
+        else this.playDeathAnimation();
     }
 
 

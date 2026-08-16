@@ -2,6 +2,21 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let gamePaused = false;
+let gameIntervalIds = [];
+let isRestarting = false;
+
+/** Creates a recurring game timer that can be cleared on restart. @param {Function} callback - Timer callback. @param {number} delay - Delay in milliseconds. @returns {number} Timer ID. */
+function registerGameInterval(callback, delay) {
+    const id = setInterval(callback, delay);
+    gameIntervalIds.push(id);
+    return id;
+}
+
+/** Stops every recurring timer belonging to the current game. @returns {void} */
+function clearGameIntervals() {
+    gameIntervalIds.forEach((id) => clearInterval(id));
+    gameIntervalIds = [];
+}
 
 /** Returns whether gameplay updates are currently paused. @returns {boolean} */
 function isGamePaused() {
@@ -214,6 +229,14 @@ function configureCanvas(element) {
 }
 
 
+/** Opens the game container in browser fullscreen mode. @returns {void} */
+function enterfullScreen() {
+    const element = document.getElementById('fullscreen');
+    const enter = element.requestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+    if (enter) enter.call(element);
+}
+
+
 /** Exits browser fullscreen mode. @returns {void} */
 function exitFullScreen() {
     const exit = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
@@ -221,9 +244,30 @@ function exitFullScreen() {
 }
 
 
-/** Reloads the page to restart the game. @returns {void} */
-function reloadGame() {
-    window.location.reload();
+/** Rebuilds and starts the game without reloading the page. @returns {Promise<void>} */
+async function restartGame() {
+    if (isRestarting) return;
+    isRestarting = true;
+    if (world) world.dispose();
+    clearGameIntervals();
+    clearGameInput();
+    gamePaused = false;
+    audioManager.reset();
+    hideRestartOverlays();
+    createGameWorld();
+    await waitForInitialGameImages();
+    await waitForNextFrame();
+    showRunningState();
+    audioManager.start();
+    isRestarting = false;
+}
+
+
+/** Restores game controls before a new round. @returns {void} */
+function hideRestartOverlays() {
+    document.getElementById('pauseOverlay').classList.add('is-hidden');
+    document.getElementById('restartButton').classList.add('is-hidden');
+    updatePauseButton();
 }
 
 

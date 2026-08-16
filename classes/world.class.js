@@ -13,6 +13,9 @@ class World {
     gameResultStartedAt = 0;
     gameResultImages = {};
     throwableObjects = [];
+    lastBottleThrow = 0;
+    bottleThrowCooldown = 500;
+    isDisposed = false;
 
     /** Creates and starts a game world. @param {HTMLCanvasElement} canvas - Canvas. @param {Keyboard} keyboard - Input state. */
     constructor(canvas, keyboard) {
@@ -63,7 +66,7 @@ class World {
 
     /** Starts recurring collision checks. @returns {void} */
     startCollisionChecks() {
-        setInterval(() => this.checkCollisions(), 1000 / 60);
+        registerGameInterval(() => this.checkCollisions(), 1000 / 60);
     }
 
 
@@ -196,10 +199,13 @@ class World {
     /** Checks whether Pepe lands on an enemy. @param {MovableObject} enemy - Enemy. @returns {boolean} Stomp state. */
     isStomping(enemy) {
         const bottom = this.character.y + this.character.height;
-        const overlaps = this.character.x + this.character.width > enemy.x &&
-            this.character.x < enemy.x + enemy.width;
+        const playerLeft = this.character.x + 30;
+        const playerRight = this.character.x + this.character.width - 30;
+        const target = this.getEnemyContactHitbox(enemy);
+        const stompTop = target.top + (enemy instanceof ChickenSmall ? 8 : 2);
+        const overlaps = playerRight > target.left && playerLeft < target.right;
         return overlaps && this.character.speedY < 0 &&
-            this.previousCharacterBottom <= enemy.y + 10 && bottom >= enemy.y;
+            this.previousCharacterBottom <= stompTop + 8 && bottom >= stompTop;
     }
 
 
@@ -316,10 +322,17 @@ class World {
 
     /** Checks Pepe's reduced hitbox against a coin. @param {Coin} coin - Coin. @returns {boolean} Collision state. */
     isCharacterCloseToCoin(coin) {
-        const player = this.getCharacterCollectibleHitbox();
+        const player = this.getCharacterCoinHitbox();
         const target = this.getCoinHitbox(coin);
         return player.right > target.left && player.left < target.right &&
             player.bottom > target.top && player.top < target.bottom;
+    }
+
+
+    /** Returns Pepe's tighter hitbox used only for coins. @returns {Object} Hitbox edges. */
+    getCharacterCoinHitbox() {
+        return { left: this.character.x + 52, right: this.character.x + this.character.width - 52,
+            top: this.character.y + 90, bottom: this.character.y + this.character.height - 55 };
     }
 
 
@@ -332,8 +345,8 @@ class World {
 
     /** Returns a coin's reduced hitbox. @param {Coin} coin - Coin. @returns {Object} Hitbox edges. */
     getCoinHitbox(coin) {
-        return { left: coin.x + 18, right: coin.x + coin.width - 18,
-            top: coin.y + 18, bottom: coin.y + coin.height - 18 };
+        return { left: coin.x + 32, right: coin.x + coin.width - 32,
+            top: coin.y + 32, bottom: coin.y + coin.height - 32 };
     }
 
 
@@ -366,20 +379,29 @@ class World {
 
     /** Starts recurring throw-input checks. @returns {void} */
     startThrowChecks() {
-        setInterval(() => this.checkThrowInput(), 1000 / 60);
+        registerGameInterval(() => this.checkThrowInput(), 1000 / 60);
     }
 
 
     /** Processes one throw input. @returns {void} */
     checkThrowInput() {
         if (isGamePaused()) return;
-        if (!this.gameOver && this.keyboard.THROW && this.bottlePercentage > 0) this.throwBottle();
+        if (!this.gameOver && this.keyboard.THROW && this.bottlePercentage > 0 &&
+            this.canThrowBottle()) this.throwBottle();
         this.keyboard.THROW = false;
+    }
+
+
+    /** Checks the delay between two bottle throws. @returns {boolean} Whether throwing is allowed. */
+    canThrowBottle() {
+        return Date.now() - this.lastBottleThrow >= this.bottleThrowCooldown;
     }
 
 
     /** Creates a thrown bottle and consumes inventory. @returns {void} */
     throwBottle() {
+        this.lastBottleThrow = Date.now();
+        this.character.wakeUp();
         const bottle = new ThrowableObject(this.character.x + 50,
             this.character.y + 100, this.character.otherDirection);
         this.throwableObjects.push(bottle);
@@ -390,6 +412,7 @@ class World {
 
     /** Draws one animation frame. @returns {void} */
     draw() {
+        if (this.isDisposed) return;
         this.prepareCanvas();
         this.drawWorldObjects();
         this.drawFixedObjects();
@@ -431,7 +454,14 @@ class World {
 
     /** Checks whether frames are still needed. @returns {boolean} Drawing state. */
     shouldContinueDrawing() {
-        return !this.gameResult || Date.now() - this.gameResultStartedAt < 2000;
+        return !this.isDisposed && (!this.gameResult || Date.now() - this.gameResultStartedAt < 2000);
+    }
+
+
+    /** Marks this world as inactive so its drawing loop can end. @returns {void} */
+    dispose() {
+        this.isDisposed = true;
+        this.gameOver = true;
     }
 
 

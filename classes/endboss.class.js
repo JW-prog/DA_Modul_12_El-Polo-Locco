@@ -5,7 +5,6 @@ class Endboss extends MovableObject {
     y = 10;
     health = 100;
     speed = 0.75;
-    attackRange = 125;
     attackCooldown = 1200;
     lastAttack = 0;
     attackEnd = 0;
@@ -74,7 +73,7 @@ class Endboss extends MovableObject {
 
     /** Starts the endboss animation loop. @returns {void} */
     animate() {
-        this.animationInterval = setInterval(() => this.updateAnimation(), 120);
+        this.animationInterval = registerGameInterval(() => this.updateAnimation(), 120);
     }
 
 
@@ -115,7 +114,7 @@ class Endboss extends MovableObject {
 
     /** Starts the endboss movement loop. @returns {void} */
     move() {
-        setInterval(() => this.updateMovement(), 1000 / 60);
+        registerGameInterval(() => this.updateMovement(), 1000 / 60);
     }
 
 
@@ -125,10 +124,15 @@ class Endboss extends MovableObject {
         if (!this.canMove()) return;
         if (!this.activateOnSight()) return;
         const character = this.world.character;
-        const distance = Math.abs(character.x - this.x);
-        if (distance <= this.attackRange) this.attack();
+        if (this.isTouchingCharacter()) this.attack();
         else if (character.x < this.x) this.moveLeft();
         else this.moveRight();
+    }
+
+
+    /** Checks whether the visible bodies of Pepe and the endboss touch. @returns {boolean} Contact state. */
+    isTouchingCharacter() {
+        return this.world.isCharacterTouchingEnemy(this);
     }
 
 
@@ -193,7 +197,7 @@ class Endboss extends MovableObject {
 
     /** Damages Pepe during an attack. @returns {void} */
     damageCharacter() {
-        if (!this.world.character.canTakeDamage()) return;
+        if (!this.isTouchingCharacter() || !this.world.character.canTakeDamage()) return;
         this.world.character.hit(this.world.getEnemyCollisionDamage(this));
         this.world.updateCharacterStatusBar();
     }
