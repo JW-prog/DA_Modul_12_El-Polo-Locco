@@ -142,9 +142,32 @@ class World {
     /** Resolves one player-enemy collision. @param {MovableObject} enemy - Enemy. @returns {void} */
     resolveEnemyCollision(enemy) {
         const stomping = !(enemy instanceof Endboss) && this.isStomping(enemy);
-        if (enemy.isDead() || (!this.character.isColliding(enemy) && !stomping)) return;
+        if (enemy.isDead() || (!this.isCharacterTouchingEnemy(enemy) && !stomping)) return;
         if (stomping) this.defeatChicken(enemy);
         else this.damageCharacter(enemy);
+    }
+
+
+    /** Checks the visible parts of Pepe and an enemy for contact. @param {MovableObject} enemy - Enemy. @returns {boolean} Collision state. */
+    isCharacterTouchingEnemy(enemy) {
+        const player = { left: this.character.x + 30,
+            right: this.character.x + this.character.width - 30,
+            top: this.character.y + 50,
+            bottom: this.character.y + this.character.height - 15 };
+        const target = this.getEnemyContactHitbox(enemy);
+        return player.right > target.left && player.left < target.right &&
+            player.bottom > target.top && player.top < target.bottom;
+    }
+
+
+    /** Returns a reduced contact hitbox matching the visible enemy body. @param {MovableObject} enemy - Enemy. @returns {Object} Hitbox edges. */
+    getEnemyContactHitbox(enemy) {
+        if (enemy instanceof Endboss) {
+            return { left: enemy.x + 55, right: enemy.x + enemy.width - 35,
+                top: enemy.y + 60, bottom: enemy.y + enemy.height - 20 };
+        }
+        return { left: enemy.x + 15, right: enemy.x + enemy.width - 15,
+            top: enemy.y + 15, bottom: enemy.y + enemy.height - 5 };
     }
 
 
@@ -302,8 +325,8 @@ class World {
 
     /** Returns Pepe's collectible hitbox. @returns {Object} Hitbox edges. */
     getCharacterCollectibleHitbox() {
-        return { left: this.character.x + 35, right: this.character.x + this.character.width - 35,
-            top: this.character.y + 45, bottom: this.character.y + this.character.height - 25 };
+        return { left: this.character.x + 45, right: this.character.x + this.character.width - 45,
+            top: this.character.y + 60, bottom: this.character.y + this.character.height - 30 };
     }
 
 
@@ -317,8 +340,18 @@ class World {
     /** Checks and collects ground bottles. @returns {void} */
     checkBottleCollisions() {
         for (let i = this.level.bottles.length - 1; i >= 0; i--) {
-            if (this.character.isColliding(this.level.bottles[i])) this.collectBottle(i);
+            if (this.isCharacterTouchingBottle(this.level.bottles[i])) this.collectBottle(i);
         }
+    }
+
+
+    /** Checks Pepe's reduced hitbox against the visible part of a bottle. @param {Bottle} bottle - Bottle. @returns {boolean} Collision state. */
+    isCharacterTouchingBottle(bottle) {
+        const player = this.getCharacterCollectibleHitbox();
+        const target = { left: bottle.x + 22, right: bottle.x + bottle.width - 22,
+            top: bottle.y + 8, bottom: bottle.y + bottle.height - 5 };
+        return player.right > target.left && player.left < target.right &&
+            player.bottom > target.top && player.top < target.bottom;
     }
 
 

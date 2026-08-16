@@ -4,6 +4,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     min-height: 100vh;
     margin: 0;
     padding: 16px;
@@ -160,6 +161,13 @@ canvas{
 .game-container:fullscreen canvas {
     width: min(100vw, 150vh);
     height: min(100vh, 66.6667vw);
+}
+
+.game-container.game-running:fullscreen .touch-controls {
+    inset: 50% auto auto 50%;
+    width: min(100vw, 150vh);
+    height: min(100vh, 66.6667vw);
+    transform: translate(-50%, -50%);
 }
 
 .start-button:active .start-button-label {
@@ -416,18 +424,21 @@ h1 {
     .game-container.game-running .touch-controls {
         position: absolute;
         z-index: 6;
-        right: 14px;
-        bottom: 14px;
-        left: 14px;
+        inset: 0;
         display: flex;
-        justify-content: space-between;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px;
+        box-sizing: border-box;
         pointer-events: none;
     }
 
     .touch-control-group {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 4px;
+        flex-wrap: nowrap;
         pointer-events: auto;
     }
 
@@ -435,16 +446,16 @@ h1 {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: clamp(48px, 8vw, 68px);
-        height: clamp(48px, 8vw, 68px);
+        width: clamp(26px, 4.3vw, 34px);
+        height: clamp(26px, 4.3vw, 34px);
         padding: 0;
-        border: 3px solid #7a2d0b;
+        border: 2px solid #7a2d0b;
         border-radius: 50%;
         background: rgba(255, 190, 16, 0.88);
-        box-shadow: 0 4px 0 #7a2d0b;
+        box-shadow: 0 3px 0 #7a2d0b;
         color: #612207;
         font-family: Arial, sans-serif;
-        font-size: clamp(25px, 4vw, 36px);
+        font-size: clamp(14px, 2.2vw, 18px);
         font-weight: 800;
         line-height: 1;
         touch-action: none;
@@ -454,7 +465,7 @@ h1 {
 
     .touch-button-action {
         font-family: 'Sancreek', cursive;
-        font-size: clamp(12px, 2vw, 18px);
+        font-size: clamp(6px, 1vw, 8px);
     }
 
     .touch-button.is-pressed {
@@ -483,24 +494,23 @@ h1 {
     }
 
     .game-container.game-running .touch-controls {
-        right: 10px;
-        bottom: 10px;
-        left: 10px;
+        gap: 4px;
+        padding: 6px;
     }
 
     .touch-control-group {
-        gap: 7px;
+        gap: 3px;
     }
 
     .touch-button {
-        width: clamp(40px, 12dvh, 52px);
-        height: clamp(40px, 12dvh, 52px);
+        width: clamp(24px, 7dvh, 31px);
+        height: clamp(24px, 7dvh, 31px);
         border-width: 2px;
         box-shadow: 0 3px 0 #7a2d0b;
-        font-size: clamp(21px, 6dvh, 28px);
+        font-size: clamp(13px, 3.5dvh, 16px);
     }
 
     .touch-button-action {
-        font-size: clamp(10px, 3.2dvh, 14px);
+        font-size: clamp(6px, 1.9dvh, 8px);
     }
 }

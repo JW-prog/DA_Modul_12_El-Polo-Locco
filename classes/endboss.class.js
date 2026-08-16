@@ -2,10 +2,10 @@
 class Endboss extends MovableObject {
     height = 500;
     width = 300;
-    y = -30;
+    y = 10;
     health = 100;
-    speed = 2;
-    attackRange = 180;
+    speed = 0.75;
+    attackRange = 125;
     attackCooldown = 1200;
     lastAttack = 0;
     attackEnd = 0;
@@ -59,7 +59,6 @@ class Endboss extends MovableObject {
         super();
         this.loadEndbossImages();
         this.x = 2300;
-        this.y = 50;
         this.animate();
         this.move();
     }
