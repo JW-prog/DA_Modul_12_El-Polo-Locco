@@ -71,7 +71,7 @@ class Character extends MovableObject {
     deathAnimationStarted = false;
     deathAnimationFinished = false;
     animationState = '';
-    lastMovementTime = Date.now() - 5000;
+    lastMovementTime = Date.now();
     longIdleDelay = 5000;
     wasInAir = false;
     jumpStarted = false;
@@ -80,10 +80,11 @@ class Character extends MovableObject {
     /** Creates Pepe and loads all animations. */
     constructor() {
         super();
-        this.loadImage('img/2_character_pepe/1_idle/long_idle/I-11.png');
+        this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadCharacterImages();
         this.applyGravity();
         this.x = 220;
+        this.lastMovementTime = Date.now();
     }
 
 

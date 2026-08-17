@@ -266,7 +266,7 @@ class World {
     checkBottleAgainstEnemies(bottle) {
         for (let i = this.level.enemies.length - 1; i >= 0; i--) {
             const enemy = this.level.enemies[i];
-            if (!enemy.isDead() && bottle.isColliding(enemy)) {
+            if (!enemy.isDead() && this.isBottleHittingEnemy(bottle, enemy)) {
                 this.resolveBottleHit(bottle, enemy);
                 return;
             }
@@ -274,10 +274,31 @@ class World {
     }
 
 
+    /** Checks a thrown bottle against the visible body of an enemy. @param {ThrowableObject} bottle - Bottle. @param {MovableObject} enemy - Enemy. @returns {boolean} Hit state. */
+    isBottleHittingEnemy(bottle, enemy) {
+        const projectile = { left: bottle.x + 6, right: bottle.x + bottle.width - 6,
+            top: bottle.y + 6, bottom: bottle.y + bottle.height - 6 };
+        const target = this.getBottleTargetHitbox(enemy);
+        return projectile.right > target.left && projectile.left < target.right &&
+            projectile.bottom > target.top && projectile.top < target.bottom;
+    }
+
+
+    /** Returns the visible enemy area that bottles can hit. @param {MovableObject} enemy - Enemy. @returns {Object} Hitbox edges. */
+    getBottleTargetHitbox(enemy) {
+        if (enemy instanceof Endboss) {
+            return { left: enemy.x + 45, right: enemy.x + enemy.width - 30,
+                top: enemy.y + 25, bottom: enemy.y + enemy.height - 20 };
+        }
+        return { left: enemy.x + 10, right: enemy.x + enemy.width - 10,
+            top: enemy.y + 10, bottom: enemy.y + enemy.height - 5 };
+    }
+
+
     /** Resolves a bottle hit. @param {ThrowableObject} bottle - Bottle. @param {MovableObject} enemy - Enemy. @returns {void} */
     resolveBottleHit(bottle, enemy) {
         this.damageEnemyWithBottle(enemy);
-        bottle.splash(enemy);
+        bottle.splash();
         audioManager.playBottleBreakSound();
         this.playChickenHitSound(enemy);
         setTimeout(() => this.removeThrowable(bottle), 250);
@@ -329,10 +350,10 @@ class World {
     }
 
 
-    /** Returns Pepe's tighter hitbox used only for coins. @returns {Object} Hitbox edges. */
+    /** Returns Pepe's pickup hitbox used for coins. @returns {Object} Hitbox edges. */
     getCharacterCoinHitbox() {
-        return { left: this.character.x + 52, right: this.character.x + this.character.width - 52,
-            top: this.character.y + 90, bottom: this.character.y + this.character.height - 55 };
+        return { left: this.character.x + 30, right: this.character.x + this.character.width - 30,
+            top: this.character.y + 115, bottom: this.character.y + this.character.height - 20 };
     }
 
 
@@ -343,10 +364,10 @@ class World {
     }
 
 
-    /** Returns a coin's reduced hitbox. @param {Coin} coin - Coin. @returns {Object} Hitbox edges. */
+    /** Returns a coin's visible pickup hitbox. @param {Coin} coin - Coin. @returns {Object} Hitbox edges. */
     getCoinHitbox(coin) {
-        return { left: coin.x + 32, right: coin.x + coin.width - 32,
-            top: coin.y + 32, bottom: coin.y + coin.height - 32 };
+        return { left: coin.x + 12, right: coin.x + coin.width - 12,
+            top: coin.y + 12, bottom: coin.y + coin.height - 12 };
     }
 
 

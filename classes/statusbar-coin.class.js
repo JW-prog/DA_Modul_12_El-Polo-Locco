@@ -41,6 +41,7 @@ class StatusBarCoin extends DrawableObject {
     /** Maps coin progress to an image index. @returns {number} Image index. */
     resolveImageIndex() {
         if (this.percentage <= 0) return 0;
-        return Math.min(5, Math.ceil(this.percentage / 20));
+        if (this.collectedCoins >= this.totalCoins && this.totalCoins > 0) return 5;
+        return Math.min(4, Math.ceil(this.percentage / 20));
     }
 }

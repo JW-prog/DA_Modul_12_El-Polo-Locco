@@ -93,6 +93,7 @@ function createGameWorld() {
 
 /** Switches the page to its running-game state. @returns {void} */
 function showRunningState() {
+    document.querySelector('.start-screen-image').classList.add('is-hidden');
     document.getElementById('startButton').classList.add('is-hidden');
     document.getElementById('startOptions').classList.add('is-hidden');
     document.getElementById('fullscreen').classList.add('game-running');
@@ -223,9 +224,17 @@ function updateSoundButton() {
 function configureCanvas(element) {
     element.logicalWidth = 720;
     element.logicalHeight = 480;
-    element.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    element.pixelRatio = getCanvasPixelRatio();
     element.width = element.logicalWidth * element.pixelRatio;
     element.height = element.logicalHeight * element.pixelRatio;
+}
+
+
+/** Uses a lighter canvas resolution on touch devices to keep movement smooth. @returns {number} Pixel ratio. */
+function getCanvasPixelRatio() {
+    const usesTouchControls = window.matchMedia('(pointer: coarse)').matches ||
+        window.matchMedia('(max-width: 1024px)').matches;
+    return usesTouchControls ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 }
 
 

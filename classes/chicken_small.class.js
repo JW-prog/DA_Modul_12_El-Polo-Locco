@@ -93,7 +93,7 @@ class ChickenSmall extends MovableObject {
     updateAnimation() {
         if (isGamePaused()) return;
         if (this.isDead()) this.playAnimation(this.IMAGES_DEAD);
-        else if (!this.isTouchingCharacter()) this.playAnimation(this.IMAGES_WALKING);
+        else this.playAnimation(this.IMAGES_WALKING);
     }
 
 

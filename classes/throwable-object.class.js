@@ -62,15 +62,17 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Converts the bottle to a splash at an enemy. @param {MovableObject} enemy - Hit enemy. @returns {void} */
-    splash(enemy) {
+    /** Converts the bottle to a splash at its exact impact position. @returns {void} */
+    splash() {
+        const impactX = this.x + this.width / 2;
+        const impactY = this.y + this.height / 2;
         this.hasHit = true;
         this.speedY = 0;
         this.stopFlightIntervals();
         this.width = 90;
         this.height = 90;
-        this.x = enemy.x + (enemy.width - this.width) / 2;
-        this.y = enemy.y + (enemy.height - this.height) / 2;
+        this.x = impactX - this.width / 2;
+        this.y = impactY - this.height / 2;
         this.img = this.imageCache[this.IMAGES_SPLASH[1]];
     }
 

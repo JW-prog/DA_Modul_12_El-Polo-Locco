@@ -206,8 +206,18 @@ class Endboss extends MovableObject {
     /** Applies damage and controls endboss sounds. @param {number} damage - Damage. @returns {void} */
     hit(damage = 1) {
         super.hit(damage);
-        if (this.isDead()) this.stopSoundsAfterDeath();
+        if (this.isDead()) this.startDeathAnimationImmediately();
         else audioManager.playEndbossHitSound();
+    }
+
+
+    /** Enters the death state immediately after the final hit. @returns {void} */
+    startDeathAnimationImmediately() {
+        if (this.animationState === 'dead') return;
+        this.animationState = 'dead';
+        this.currentImage = 1;
+        this.img = this.imageCache[this.IMAGES_DEAD[0]];
+        this.stopSoundsAfterDeath();
     }
 
 
