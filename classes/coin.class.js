@@ -3,7 +3,11 @@ class Coin extends DrawableObject {
     height = 80;
     IMAGES_COIN = ['img/8_coin/coin_1.png', 'img/8_coin/coin_2.png'];
 
-    /** Creates and animates a coin. @param {number} x - X position. @param {number} y - Y position. */
+    /**
+     * Creates and animates a coin.
+     * @param {number} x - X position.
+     * @param {number} y - Y position.
+     */
     constructor(x, y) {
         super();
         this.loadImage(this.IMAGES_COIN[0]);
@@ -14,13 +18,19 @@ class Coin extends DrawableObject {
     }
 
 
-    /** Starts the coin animation loop. @returns {void} */
+    /**
+     * Starts the coin animation loop.
+     * @returns {void}
+     */
     animate() {
         registerGameInterval(() => this.playNextCoinFrame(), 300);
     }
 
 
-    /** Advances the coin animation. @returns {void} */
+    /**
+     * Advances the coin animation.
+     * @returns {void}
+     */
     playNextCoinFrame() {
         if (isGamePaused()) return;
         const path = this.IMAGES_COIN[this.currentImage % this.IMAGES_COIN.length];

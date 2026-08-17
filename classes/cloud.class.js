@@ -4,7 +4,9 @@ class Cloud extends MovableObject {
     height = 200;
     speed = 0.15;
 
-    /** Creates and animates a cloud. */
+    /**
+     * Creates and animates a cloud.
+     */
     constructor() {
         super();
         this.loadImage('img/5_background/layers/4_clouds/1.png');
@@ -13,7 +15,10 @@ class Cloud extends MovableObject {
     }
 
 
-    /** Starts the cloud movement loop. @returns {void} */
+    /**
+     * Starts the cloud movement loop.
+     * @returns {void}
+     */
     animate() {
         registerGameInterval(() => {
             if (!isGamePaused()) this.moveLeft();

@@ -53,7 +53,9 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    /** Creates the endboss and loads its animations. */
+    /**
+     * Creates the endboss and loads its animations.
+     */
     constructor() {
         super();
         this.loadEndbossImages();
@@ -63,7 +65,10 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Loads every endboss animation. @returns {void} */
+    /**
+     * Loads every endboss animation.
+     * @returns {void}
+     */
     loadEndbossImages() {
         this.loadImage(this.IMAGES_WALKING[0]);
         [this.IMAGES_WALKING, this.IMAGES_ALERT, this.IMAGES_ATTACK,
@@ -71,13 +76,19 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Starts the endboss animation loop. @returns {void} */
+    /**
+     * Starts the endboss animation loop.
+     * @returns {void}
+     */
     animate() {
         this.animationInterval = registerGameInterval(() => this.updateAnimation(), 120);
     }
 
 
-    /** Advances the current endboss animation. @returns {void} */
+    /**
+     * Advances the current endboss animation.
+     * @returns {void}
+     */
     updateAnimation() {
         if (isGamePaused()) return;
         const animation = this.getCurrentAnimation();
@@ -86,7 +97,11 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Advances the finite death animation. @param {string[]} images - Death frames. @returns {void} */
+    /**
+     * Advances the finite death animation.
+     * @param {string[]} images - Death frames.
+     * @returns {void}
+     */
     playDeathAnimation(images) {
         if (this.deathAnimationFinished) return;
         const frameIndex = this.currentImage % images.length;
@@ -96,14 +111,20 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Finishes death animation and schedules removal. @returns {void} */
+    /**
+     * Finishes death animation and schedules removal.
+     * @returns {void}
+     */
     finishDeathAnimation() {
         this.deathAnimationFinished = true;
         setTimeout(() => this.removeFromWorld(), 120);
     }
 
 
-    /** Removes the endboss and stops its animation loop. @returns {void} */
+    /**
+     * Removes the endboss and stops its animation loop.
+     * @returns {void}
+     */
     removeFromWorld() {
         if (!this.world) return;
         const index = this.world.level.enemies.indexOf(this);
@@ -112,13 +133,19 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Starts the endboss movement loop. @returns {void} */
+    /**
+     * Starts the endboss movement loop.
+     * @returns {void}
+     */
     move() {
         registerGameInterval(() => this.updateMovement(), 1000 / 60);
     }
 
 
-    /** Updates movement and attacks for one frame. @returns {void} */
+    /**
+     * Updates movement and attacks for one frame.
+     * @returns {void}
+     */
     updateMovement() {
         if (isGamePaused()) return;
         if (!this.canMove()) return;
@@ -130,19 +157,28 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Checks whether the visible bodies of Pepe and the endboss touch. @returns {boolean} Contact state. */
+    /**
+     * Checks whether the visible bodies of Pepe and the endboss touch.
+     * @returns {boolean} Contact state.
+     */
     isTouchingCharacter() {
         return this.world.isCharacterTouchingEnemy(this);
     }
 
 
-    /** Checks whether movement is currently allowed. @returns {boolean} Movement state. */
+    /**
+     * Checks whether movement is currently allowed.
+     * @returns {boolean} Movement state.
+     */
     canMove() {
         return this.world && !this.isDead() && !this.isHurt() && !this.isAttacking();
     }
 
 
-    /** Activates the boss once Pepe sees it. @returns {boolean} Activation state. */
+    /**
+     * Activates the boss once Pepe sees it.
+     * @returns {boolean} Activation state.
+     */
     activateOnSight() {
         if (this.hasSeenCharacter) return true;
         this.hasSeenCharacter = this.hasVisualContact();
@@ -151,7 +187,10 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Checks whether the boss is within the visible canvas. @returns {boolean} Visibility. */
+    /**
+     * Checks whether the boss is within the visible canvas.
+     * @returns {boolean} Visibility.
+     */
     hasVisualContact() {
         const screenX = this.x + this.world.camera_x;
         const canvasWidth = this.world.canvas.logicalWidth || this.world.canvas.width;
@@ -159,7 +198,10 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Selects the current endboss animation. @returns {string[]} Animation frames. */
+    /**
+     * Selects the current endboss animation.
+     * @returns {string[]} Animation frames.
+     */
     getCurrentAnimation() {
         if (this.isDead()) return this.setAnimationState('dead', this.IMAGES_DEAD);
         if (this.isHurt()) return this.setAnimationState('hurt', this.IMAGES_HURT);
@@ -169,7 +211,12 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Updates animation state. @param {string} name - State. @param {string[]} images - Frames. @returns {string[]} Frames. */
+    /**
+     * Updates animation state.
+     * @param {string} name - State.
+     * @param {string[]} images - Frames.
+     * @returns {string[]} Frames.
+     */
     setAnimationState(name, images) {
         if (this.animationState !== name) {
             this.animationState = name;
@@ -179,13 +226,19 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Checks whether the attack animation is active. @returns {boolean} Attack state. */
+    /**
+     * Checks whether the attack animation is active.
+     * @returns {boolean} Attack state.
+     */
     isAttacking() {
         return Date.now() < this.attackEnd;
     }
 
 
-    /** Starts an attack when its cooldown has elapsed. @returns {void} */
+    /**
+     * Starts an attack when its cooldown has elapsed.
+     * @returns {void}
+     */
     attack() {
         const now = Date.now();
         if (now - this.lastAttack < this.attackCooldown) return;
@@ -195,7 +248,10 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Damages Pepe during an attack. @returns {void} */
+    /**
+     * Damages Pepe during an attack.
+     * @returns {void}
+     */
     damageCharacter() {
         if (!this.isTouchingCharacter() || !this.world.character.canTakeDamage()) return;
         this.world.character.hit(this.world.getEnemyCollisionDamage(this));
@@ -203,7 +259,11 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Applies damage and controls endboss sounds. @param {number} damage - Damage. @returns {void} */
+    /**
+     * Applies damage and controls endboss sounds.
+     * @param {number} damage - Damage.
+     * @returns {void}
+     */
     hit(damage = 1) {
         super.hit(damage);
         if (this.isDead()) this.startDeathAnimationImmediately();
@@ -211,7 +271,10 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Enters the death state immediately after the final hit. @returns {void} */
+    /**
+     * Enters the death state immediately after the final hit.
+     * @returns {void}
+     */
     startDeathAnimationImmediately() {
         if (this.animationState === 'dead') return;
         this.animationState = 'dead';
@@ -221,7 +284,10 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Stops every endboss sound after death. @returns {void} */
+    /**
+     * Stops every endboss sound after death.
+     * @returns {void}
+     */
     stopSoundsAfterDeath() {
         audioManager.stopEndbossHitSound();
         audioManager.stopEndbossSound();

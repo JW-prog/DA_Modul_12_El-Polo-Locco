@@ -8,13 +8,19 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     damageCooldown = 1000;
 
-    /** Starts the object's gravity loop. @returns {void} */
+    /**
+     * Starts the object's gravity loop.
+     * @returns {void}
+     */
     applyGravity() {
         registerGameInterval(() => this.updateGravity(), 1000 / 60);
     }
 
 
-    /** Applies one gravity step. @returns {void} */
+    /**
+     * Applies one gravity step.
+     * @returns {void}
+     */
     updateGravity() {
         if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY / 2;
@@ -23,7 +29,10 @@ class MovableObject extends DrawableObject {
     }
 
 
-    /** Checks whether the object is airborne. @returns {boolean} Airborne state. */
+    /**
+     * Checks whether the object is airborne.
+     * @returns {boolean} Airborne state.
+     */
     isAboveGround() {
         return this instanceof ThrowableObject || this.y < 180;
     }
@@ -41,38 +50,59 @@ class MovableObject extends DrawableObject {
     }
 
 
-    /** Applies damage and records the hit time. @param {number} damage - Damage amount. @returns {void} */
+    /**
+     * Applies damage and records the hit time.
+     * @param {number} damage - Damage amount.
+     * @returns {void}
+     */
     hit(damage = 1) {
         this.energy = Math.max(0, this.energy - damage);
         this.lastHit = Date.now();
     }
 
 
-    /** Checks the damage cooldown. @returns {boolean} Whether damage is allowed. */
+    /**
+     * Checks the damage cooldown.
+     * @returns {boolean} Whether damage is allowed.
+     */
     canTakeDamage() {
         return Date.now() - this.lastHit >= this.damageCooldown;
     }
 
 
-    /** Restores energy up to its maximum. @param {number} amount - Healing amount. @returns {void} */
+    /**
+     * Restores energy up to its maximum.
+     * @param {number} amount - Healing amount.
+     * @returns {void}
+     */
     heal(amount) {
         this.energy = Math.min(this.maxEnergy, this.energy + amount);
     }
 
 
-    /** Checks whether all energy is depleted. @returns {boolean} Death state. */
+    /**
+     * Checks whether all energy is depleted.
+     * @returns {boolean} Death state.
+     */
     isDead() {
         return this.energy <= 0;
     }
 
 
-    /** Checks whether the hit animation is active. @returns {boolean} Hurt state. */
+    /**
+     * Checks whether the hit animation is active.
+     * @returns {boolean} Hurt state.
+     */
     isHurt() {
         return (Date.now() - this.lastHit) / 1000 < 0.25;
     }
 
 
-    /** Advances a looping animation. @param {string[]} images - Animation frames. @returns {void} */
+    /**
+     * Advances a looping animation.
+     * @param {string[]} images - Animation frames.
+     * @returns {void}
+     */
     playAnimation(images) {
         const path = images[this.currentImage % images.length];
         this.img = this.imageCache[path];
@@ -80,7 +110,11 @@ class MovableObject extends DrawableObject {
     }
 
 
-    /** Advances an animation without wrapping. @param {string[]} images - Animation frames. @returns {void} */
+    /**
+     * Advances an animation without wrapping.
+     * @param {string[]} images - Animation frames.
+     * @returns {void}
+     */
     playAnimationOnce(images) {
         const index = Math.min(this.currentImage, images.length - 1);
         this.img = this.imageCache[images[index]];
@@ -88,21 +122,30 @@ class MovableObject extends DrawableObject {
     }
 
 
-    /** Moves right and updates orientation. @returns {void} */
+    /**
+     * Moves right and updates orientation.
+     * @returns {void}
+     */
     moveRight() {
         this.x += this.speed;
         this.otherDirection = true;
     }
 
 
-    /** Moves left and updates orientation. @returns {void} */
+    /**
+     * Moves left and updates orientation.
+     * @returns {void}
+     */
     moveLeft() {
         this.x -= this.speed;
         this.otherDirection = false;
     }
 
 
-    /** Starts an upward jump. @returns {void} */
+    /**
+     * Starts an upward jump.
+     * @returns {void}
+     */
     jump() {
         this.speedY = 30;
     }

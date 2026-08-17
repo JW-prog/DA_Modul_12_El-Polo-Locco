@@ -77,7 +77,9 @@ class Character extends MovableObject {
     jumpStarted = false;
 
 
-    /** Creates Pepe and loads all animations. */
+    /**
+     * Creates Pepe and loads all animations.
+     */
     constructor() {
         super();
         this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
@@ -88,7 +90,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Loads every character animation. @returns {void} */
+    /**
+     * Loads every character animation.
+     * @returns {void}
+     */
     loadCharacterImages() {
         [this.IMAGES_WALKING, this.IMAGES_JUMPING, this.IMAGES_DEAD,
             this.IMAGES_HURT, this.IMAGES_IDLE, this.IMAGES_SLEEPING]
@@ -96,13 +101,19 @@ class Character extends MovableObject {
     }
 
 
-    /** Starts Pepe's gravity loop. @returns {void} */
+    /**
+     * Starts Pepe's gravity loop.
+     * @returns {void}
+     */
     applyGravity() {
         registerGameInterval(() => this.updateCharacterGravity(), 1000 / 60);
     }
 
 
-    /** Applies one gravity step and clamps the floor. @returns {void} */
+    /**
+     * Applies one gravity step and clamps the floor.
+     * @returns {void}
+     */
     updateCharacterGravity() {
         if (isGamePaused()) return;
         if (!this.isAboveGround() && this.speedY <= 0) return;
@@ -112,20 +123,30 @@ class Character extends MovableObject {
     }
 
 
-    /** Places Pepe exactly on the ground. @returns {void} */
+    /**
+     * Places Pepe exactly on the ground.
+     * @returns {void}
+     */
     landOnGround() {
         this.y = this.groundY;
         this.speedY = 0;
     }
 
 
-    /** Checks whether Pepe is airborne. @returns {boolean} Airborne state. */
+    /**
+     * Checks whether Pepe is airborne.
+     * @returns {boolean} Airborne state.
+     */
     isAboveGround() {
         return this.y < this.groundY;
     }
 
 
-    /** Applies damage and selects the matching sound/state. @param {number} damage - Damage. @returns {void} */
+    /**
+     * Applies damage and selects the matching sound/state.
+     * @param {number} damage - Damage.
+     * @returns {void}
+     */
     hit(damage = 2) {
         this.wakeUp();
         super.hit(damage);
@@ -134,14 +155,20 @@ class Character extends MovableObject {
     }
 
 
-    /** Resets Pepe's inactivity timer so sleeping ends immediately. @returns {void} */
+    /**
+     * Resets Pepe's inactivity timer so sleeping ends immediately.
+     * @returns {void}
+     */
     wakeUp() {
         this.lastMovementTime = Date.now();
         if (this.animationState === 'long_idle') this.animationState = '';
     }
 
 
-    /** Handles Pepe's fatal hit. @returns {void} */
+    /**
+     * Handles Pepe's fatal hit.
+     * @returns {void}
+     */
     handleFatalHit() {
         audioManager.stopCharacterHitSound();
         audioManager.setWalkingSound(false);
@@ -149,7 +176,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Initializes Pepe's death animation once. @returns {void} */
+    /**
+     * Initializes Pepe's death animation once.
+     * @returns {void}
+     */
     startDeathAnimation() {
         if (this.deathAnimationStarted) return;
         this.deathAnimationStarted = true;
@@ -159,13 +189,19 @@ class Character extends MovableObject {
     }
 
 
-    /** Starts movement and animation loops. @returns {void} */
+    /**
+     * Starts movement and animation loops.
+     * @returns {void}
+     */
     animate() {
         registerGameInterval(() => this.updateMovement(), 1000 / 60);
         registerGameInterval(() => this.updateAnimation(), 80);
     }
 
-    /** Updates player movement for one frame. @returns {void} */
+    /**
+     * Updates player movement for one frame.
+     * @returns {void}
+     */
     updateMovement() {
         if (isGamePaused()) return audioManager.setWalkingSound(false);
         if (this.isDead() || this.world.gameOver) return audioManager.setWalkingSound(false);
@@ -178,14 +214,20 @@ class Character extends MovableObject {
     }
 
 
-    /** Records recent player input for idle animations. @returns {void} */
+    /**
+     * Records recent player input for idle animations.
+     * @returns {void}
+     */
     updateMovementTime() {
         const input = this.world.keyboard;
         if (input.RIGHT || input.LEFT || input.SPACE) this.lastMovementTime = Date.now();
     }
 
 
-    /** Moves Pepe horizontally from keyboard input. @returns {void} */
+    /**
+     * Moves Pepe horizontally from keyboard input.
+     * @returns {void}
+     */
     moveFromInput() {
         const input = this.world.keyboard;
         if (input.RIGHT && this.x < this.world.level.levelEndX) this.moveCharacterRight();
@@ -193,21 +235,30 @@ class Character extends MovableObject {
     }
 
 
-    /** Moves Pepe right. @returns {void} */
+    /**
+     * Moves Pepe right.
+     * @returns {void}
+     */
     moveCharacterRight() {
         this.x += this.speed;
         this.otherDirection = false;
     }
 
 
-    /** Moves Pepe left. @returns {void} */
+    /**
+     * Moves Pepe left.
+     * @returns {void}
+     */
     moveCharacterLeft() {
         this.x -= this.speed;
         this.otherDirection = true;
     }
 
 
-    /** Starts a jump from keyboard input. @returns {void} */
+    /**
+     * Starts a jump from keyboard input.
+     * @returns {void}
+     */
     jumpFromInput() {
         if (!this.world.keyboard.SPACE || this.isAboveGround() || this.jumpStarted) return;
         this.speedY = 30;
@@ -216,7 +267,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Selects and advances Pepe's current animation. @returns {void} */
+    /**
+     * Selects and advances Pepe's current animation.
+     * @returns {void}
+     */
     updateAnimation() {
         if (isGamePaused()) return;
         if (this.isDead()) return this.updateDeathAnimation();
@@ -225,7 +279,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Returns the current living-character animation. @returns {Object} State and frames. */
+    /**
+     * Returns the current living-character animation.
+     * @returns {Object} State and frames.
+     */
     getCharacterAnimation() {
         if (this.isHurt()) return { state: 'hurt', images: this.IMAGES_HURT };
         if (this.isAboveGround()) return { state: 'jumping', images: this.IMAGES_JUMPING };
@@ -236,7 +293,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Selects the short or long idle animation. @returns {Object} State and frames. */
+    /**
+     * Selects the short or long idle animation.
+     * @returns {Object} State and frames.
+     */
     getIdleAnimation() {
         if (Date.now() - this.lastMovementTime >= this.longIdleDelay) {
             return { state: 'long_idle', images: this.IMAGES_SLEEPING };
@@ -245,14 +305,20 @@ class Character extends MovableObject {
     }
 
 
-    /** Advances Pepe's death state. @returns {void} */
+    /**
+     * Advances Pepe's death state.
+     * @returns {void}
+     */
     updateDeathAnimation() {
         if (!this.deathAnimationStarted) this.startDeathAnimation();
         else this.playDeathAnimation();
     }
 
 
-    /** Detects a completed landing. @returns {void} */
+    /**
+     * Detects a completed landing.
+     * @returns {void}
+     */
     checkLanding() {
         const isInAir = this.isAboveGround();
         if (this.jumpStarted && this.wasInAir && !isInAir) {
@@ -263,14 +329,22 @@ class Character extends MovableObject {
     }
 
 
-    /** Synchronizes the walking sound. @returns {void} */
+    /**
+     * Synchronizes the walking sound.
+     * @returns {void}
+     */
     updateWalkingSound() {
         const isMoving = this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
         audioManager.setWalkingSound(isMoving && !this.isAboveGround());
     }
 
 
-    /** Plays an animation and resets changed state. @param {string} state - State name. @param {string[]} images - Frames. @returns {void} */
+    /**
+     * Plays an animation and resets changed state.
+     * @param {string} state - State name.
+     * @param {string[]} images - Frames.
+     * @returns {void}
+     */
     playCharacterAnimation(state, images) {
         if (this.animationState !== state) {
             this.animationState = state;
@@ -280,7 +354,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Advances Pepe's finite death animation. @returns {void} */
+    /**
+     * Advances Pepe's finite death animation.
+     * @returns {void}
+     */
     playDeathAnimation() {
         if (this.deathAnimationFinished) return;
         const frameIndex = this.currentImage % this.IMAGES_DEAD.length;
@@ -290,7 +367,10 @@ class Character extends MovableObject {
     }
 
 
-    /** Completes Pepe's death animation. @returns {void} */
+    /**
+     * Completes Pepe's death animation.
+     * @returns {void}
+     */
     finishDeathAnimation() {
         this.deathAnimationFinished = true;
         setTimeout(() => this.isVisible = false, 50);

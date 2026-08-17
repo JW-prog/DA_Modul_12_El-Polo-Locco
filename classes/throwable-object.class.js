@@ -19,7 +19,12 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
 
-    /** Creates and throws a salsa bottle. @param {number} x - X position. @param {number} y - Y position. @param {boolean} otherDirection - Left-facing state. */
+    /**
+     * Creates and throws a salsa bottle.
+     * @param {number} x - X position.
+     * @param {number} y - Y position.
+     * @param {boolean} otherDirection - Left-facing state.
+     */
     constructor(x, y, otherDirection = false) {
         super();
         this.loadImage(this.IMAGES_ROTATION[0]);
@@ -34,7 +39,10 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Starts flight movement and rotation. @returns {void} */
+    /**
+     * Starts flight movement and rotation.
+     * @returns {void}
+     */
     throw() {
         this.speedY = 24;
         this.applyGravity();
@@ -43,14 +51,20 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Moves the bottle in its throw direction. @returns {void} */
+    /**
+     * Moves the bottle in its throw direction.
+     * @returns {void}
+     */
     moveInThrowDirection() {
         if (isGamePaused()) return;
         this.x += this.otherDirection ? -10 : 10;
     }
 
 
-    /** Starts bottle gravity. @returns {void} */
+    /**
+     * Starts bottle gravity.
+     * @returns {void}
+     */
     applyGravity() {
         this.gravityInterval = registerGameInterval(() => {
             if (isGamePaused()) return;
@@ -62,7 +76,10 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Converts the bottle to a splash at its exact impact position. @returns {void} */
+    /**
+     * Converts the bottle to a splash at its exact impact position.
+     * @returns {void}
+     */
     splash() {
         const impactX = this.x + this.width / 2;
         const impactY = this.y + this.height / 2;
@@ -77,7 +94,11 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Converts a missed bottle to a splash on the ground. @param {number} groundY - Ground line. @returns {void} */
+    /**
+     * Converts a missed bottle to a splash on the ground.
+     * @param {number} groundY - Ground line.
+     * @returns {void}
+     */
     splashOnGround(groundY) {
         this.hasHit = true;
         this.speedY = 0;
@@ -89,7 +110,10 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Stops every flight interval. @returns {void} */
+    /**
+     * Stops every flight interval.
+     * @returns {void}
+     */
     stopFlightIntervals() {
         clearInterval(this.gravityInterval);
         clearInterval(this.movementInterval);
@@ -97,7 +121,10 @@ class ThrowableObject extends MovableObject {
     }
 
 
-    /** Marks thrown bottles as airborne. @returns {boolean} Always true. */
+    /**
+     * Marks thrown bottles as airborne.
+     * @returns {boolean} Always true.
+     */
     isAboveGround() {
         return true;
     }

@@ -14,7 +14,10 @@ class Chicken extends MovableObject {
         'img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
     
-    /** Creates a normal chicken. @param {number} x - Horizontal start position. */
+    /**
+     * Creates a normal chicken.
+     * @param {number} x - Horizontal start position.
+     */
     constructor(x) {
         super();
         this.loadImage('img\\3_enemies_chicken\\chicken_normal\\1_walk\\1_w.png');
@@ -26,14 +29,20 @@ class Chicken extends MovableObject {
     }
 
 
-    /** Starts movement and animation loops. @returns {void} */
+    /**
+     * Starts movement and animation loops.
+     * @returns {void}
+     */
     animate() {
         registerGameInterval(() => this.updateMovement(), 1000 / 60);
         registerGameInterval(() => this.updateAnimation(), 1000 / 10);
     }
 
 
-    /** Updates movement for one frame. @returns {void} */
+    /**
+     * Updates movement for one frame.
+     * @returns {void}
+     */
     updateMovement() {
         if (!this.world || this.isDead() || isGamePaused()) return;
         this.activateNearCharacter();
@@ -41,7 +50,10 @@ class Chicken extends MovableObject {
     }
 
 
-    /** Updates the current animation. @returns {void} */
+    /**
+     * Updates the current animation.
+     * @returns {void}
+     */
     updateAnimation() {
         if (isGamePaused()) return;
         if (this.isDead()) this.playAnimation(this.IMAGES_DEAD);
@@ -49,19 +61,28 @@ class Chicken extends MovableObject {
     }
 
 
-    /** Checks whether this chicken currently touches Pepe. @returns {boolean} Contact state. */
+    /**
+     * Checks whether this chicken currently touches Pepe.
+     * @returns {boolean} Contact state.
+     */
     isTouchingCharacter() {
         return Boolean(this.world && this.world.isCharacterTouchingEnemy(this));
     }
 
 
-    /** Activates the chicken near Pepe. @returns {void} */
+    /**
+     * Activates the chicken near Pepe.
+     * @returns {void}
+     */
     activateNearCharacter() {
         if (Math.abs(this.x - this.world.character.x) <= 600) this.isActivated = true;
     }
 
 
-    /** Moves toward Pepe. @returns {void} */
+    /**
+     * Moves toward Pepe.
+     * @returns {void}
+     */
     moveTowardsCharacter() {
         const chickenCenter = this.x + this.width / 2;
         const characterCenter = this.world.character.x + this.world.character.width / 2;
