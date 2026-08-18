@@ -22,6 +22,10 @@ body{
     display: none;
 }
 
+.game-toolbar {
+    display: contents;
+}
+
 canvas{
     background-color: black;
     box-sizing: border-box;
@@ -128,8 +132,7 @@ canvas{
 }
 
 .game-container.game-running .screen-button {
-    top: 10px;
-    bottom: auto;
+    position: static;
     width: 46px;
     height: 46px;
     padding: 9px;
@@ -139,12 +142,22 @@ canvas{
 }
 
 .game-container.game-running .screen-button-left {
-    left: 12px;
+    order: 1;
 }
 
 .game-container.game-running .screen-button-right {
-    right: 12px;
-    left: auto;
+    order: 1;
+}
+
+.game-container.game-running .game-toolbar {
+    position: absolute;
+    z-index: 7;
+    top: 10px;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(-50%);
 }
 
 .game-container.game-running .screen-button:active {
