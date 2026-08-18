@@ -65,22 +65,24 @@
                 <span aria-hidden="true">§</span>
             </button>
         </div>
-        <button class="screen-button screen-button-left" type="button" onclick="enterfullScreen()" aria-label="Vollbildmodus einschalten" title="Vollbild">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" />
-            </svg>
-        </button>
-        <button class="screen-button screen-button-right" type="button" onclick="exitFullScreen()" aria-label="Vollbildmodus verlassen" title="Vollbild verlassen">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" />
-            </svg>
-        </button>
-        <button id="soundButton" class="sound-button" type="button" onclick="toggleSound()" aria-label="Ton ausschalten" title="Ton ausschalten">
-            <span aria-hidden="true">&#128266;</span>
-        </button>
-        <button id="pauseButton" class="pause-button is-hidden" type="button" onclick="togglePause()" aria-label="Spiel pausieren" title="Spiel pausieren">
-            <span aria-hidden="true">&#10074;&#10074;</span>
-        </button>
+        <div class="game-toolbar">
+            <button class="screen-button screen-button-left" type="button" onclick="enterfullScreen()" aria-label="Vollbildmodus einschalten" title="Vollbild">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" />
+                </svg>
+            </button>
+            <button class="screen-button screen-button-right" type="button" onclick="exitFullScreen()" aria-label="Vollbildmodus verlassen" title="Vollbild verlassen">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" />
+                </svg>
+            </button>
+            <button id="soundButton" class="sound-button" type="button" onclick="toggleSound()" aria-label="Ton ausschalten" title="Ton ausschalten">
+                <span aria-hidden="true">&#128266;</span>
+            </button>
+            <button id="pauseButton" class="pause-button is-hidden" type="button" onclick="togglePause()" aria-label="Spiel pausieren" title="Spiel pausieren">
+                <span aria-hidden="true">&#10074;&#10074;</span>
+            </button>
+        </div>
         <div class="touch-controls" aria-label="Touch-Steuerung">
             <div class="touch-control-group">
                 <button class="touch-button" type="button" data-key="LEFT" aria-label="Nach links bewegen">&larr;</button>
