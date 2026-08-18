@@ -156,13 +156,16 @@
 }
 
 .game-container.game-running .sound-button {
-    top: 10px;
-    right: 12px;
-    bottom: auto;
-    left: auto;
+    position: static;
+    order: 3;
     width: 46px;
     height: 46px;
     font-size: 19px;
+}
+
+.game-container.game-running .pause-button {
+    position: static;
+    order: 2;
 }
 
 .game-overlay {
@@ -294,7 +297,7 @@
         font-size: 17px;
     }
 
-    .game-container.game-running .sound-button { right: 8px; left: auto; }
+    .game-container.game-running .sound-button { position: static; }
 
     .imprint-icon-button span {
         font-size: 21px;
