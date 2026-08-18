@@ -22,20 +22,20 @@
     position: absolute;
     z-index: 7;
     top: 10px;
-    right: auto;
-    left: 50%;
+    right: 66px;
+    left: auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 46px;
+    height: 46px;
     padding: 0;
     border: 2px solid #7a2d0b;
     border-radius: 50%;
     background: linear-gradient(#ffd438, #ff9d00);
     box-shadow: 0 2px 0 #7a2d0b;
     color: #7a2d0b;
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 800;
     cursor: pointer;
 }
@@ -157,12 +157,12 @@
 
 .game-container.game-running .sound-button {
     top: 10px;
-    right: auto;
+    right: 12px;
     bottom: auto;
-    left: calc(50% + 38px);
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
+    left: auto;
+    width: 46px;
+    height: 46px;
+    font-size: 19px;
 }
 
 .game-overlay {
@@ -294,9 +294,7 @@
         font-size: 17px;
     }
 
-    .game-container.game-running .sound-button {
-        left: calc(50% + 38px);
-    }
+    .game-container.game-running .sound-button { right: 8px; left: auto; }
 
     .imprint-icon-button span {
         font-size: 21px;

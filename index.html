@@ -131,11 +131,13 @@
                 <h2 id="pauseTitle">Spiel pausiert</h2>
                 <button type="button" onclick="togglePause()">Weiter</button>
                 <button type="button" onclick="restartGame()">Neu starten</button>
+                <button type="button" onclick="goHome()">Home</button>
             </div>
         </div>
-        <button id="restartButton" class="restart-button is-hidden" type="button" onclick="restartGame()">
-            Neu starten
-        </button>
+        <div id="resultActions" class="result-actions is-hidden">
+            <button id="restartButton" class="restart-button" type="button" onclick="restartGame()">Neu starten</button>
+            <button class="home-button" type="button" onclick="goHome()">Home</button>
+        </div>
     </div>
 </body>
 </html>
