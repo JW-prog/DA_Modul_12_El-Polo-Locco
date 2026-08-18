@@ -29,7 +29,8 @@ class WorldRenderer extends WorldCollectibles {
      * @returns {void}
      */
     drawWorldObjects() {
-        this.ctx.translate(this.camera_x, 0);
+        const roundedCameraX = Math.round(this.camera_x);
+        this.ctx.translate(roundedCameraX, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.level.bottles);
@@ -37,7 +38,7 @@ class WorldRenderer extends WorldCollectibles {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.addToMap(this.character);
-        this.ctx.translate(-this.camera_x, 0);
+        this.ctx.translate(-roundedCameraX, 0);
     }
 
 

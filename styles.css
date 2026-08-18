@@ -130,21 +130,21 @@ canvas{
 .game-container.game-running .screen-button {
     top: 10px;
     bottom: auto;
-    width: 28px;
-    height: 28px;
-    padding: 5px;
+    width: 46px;
+    height: 46px;
+    padding: 9px;
     border-width: 2px;
     border-radius: 50%;
     box-shadow: 0 2px 0 #7a2d0b;
 }
 
 .game-container.game-running .screen-button-left {
-    left: calc(50% - 38px);
+    left: 12px;
 }
 
 .game-container.game-running .screen-button-right {
-    right: auto;
-    left: calc(50% - 38px);
+    right: 12px;
+    left: auto;
 }
 
 .game-container.game-running .screen-button:active {
@@ -175,10 +175,10 @@ canvas{
 }
 
 .game-container.game-running:fullscreen .touch-controls {
-    inset: 50% auto auto 50%;
+    inset: auto 50% 0 auto;
     width: min(100vw, 150vh);
     height: min(100vh, 66.6667vw);
-    transform: translate(-50%, -50%);
+    transform: translateX(50%);
 }
 
 .start-button:active .start-button-label {
@@ -402,14 +402,6 @@ h1 {
 
 /* Use the mobile game layout, including its controls, on notebooks as well. */
 @media only screen and (max-width: 1024px) {
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        overscroll-behavior: none;
-    }
-
     body {
         min-height: 100dvh;
         padding: 0;
@@ -458,8 +450,8 @@ h1 {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: clamp(30px, 5vw, 40px);
-        height: clamp(30px, 5vw, 40px);
+        width: clamp(48px, 7vw, 60px);
+        height: clamp(48px, 7vw, 60px);
         padding: 0;
         border: 2px solid #7a2d0b;
         border-radius: 50%;
@@ -467,7 +459,7 @@ h1 {
         box-shadow: 0 3px 0 #7a2d0b;
         color: #612207;
         font-family: Arial, sans-serif;
-        font-size: clamp(16px, 2.5vw, 20px);
+        font-size: clamp(20px, 3vw, 26px);
         font-weight: 800;
         line-height: 1;
         touch-action: none;
@@ -477,7 +469,7 @@ h1 {
 
     .touch-button-action {
         font-family: 'Sancreek', cursive;
-        font-size: clamp(7px, 1.2vw, 10px);
+        font-size: clamp(10px, 1.5vw, 14px);
     }
 
     .touch-button.is-pressed {
@@ -524,14 +516,46 @@ h1 {
     }
 
     .touch-button {
-        width: clamp(27px, 8dvh, 35px);
-        height: clamp(27px, 8dvh, 35px);
+        width: clamp(44px, 12dvh, 54px);
+        height: clamp(44px, 12dvh, 54px);
         border-width: 2px;
         box-shadow: 0 3px 0 #7a2d0b;
-        font-size: clamp(14px, 4dvh, 18px);
+        font-size: clamp(18px, 5dvh, 24px);
     }
 
     .touch-button-action {
-        font-size: clamp(7px, 2.2dvh, 9px);
+        font-size: clamp(9px, 2.8dvh, 12px);
     }
+}
+
+.result-actions {
+    position: absolute;
+    z-index: 15;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.result-actions.is-hidden {
+    display: none;
+}
+
+.result-actions .restart-button,
+.result-actions .home-button {
+    position: static;
+    min-height: 44px;
+    transform: none;
+}
+
+.home-button {
+    padding: 7px 18px;
+    border: 2px solid #7a2d0b;
+    border-radius: 9px;
+    background: linear-gradient(#ffd438, #ff9d00);
+    box-shadow: 0 3px 0 #7a2d0b;
+    color: #612207;
+    font-family: 'Sancreek', cursive;
+    font-size: 16px;
+    cursor: pointer;
 }

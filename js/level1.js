@@ -42,7 +42,7 @@ function createBackgrounds() {
 /** Creates one background section. @param {number} section - Section index. @returns {BackgroundObject[]} Layers. */
 function createBackgroundSection(section) {
     const variant = section % 2 + 1;
-    const x = 719 * section;
+    const x = 720 * section;
     return [new BackgroundObject('img/5_background/layers/air.png', x, 0),
         new BackgroundObject(`img/5_background/layers/3_third_layer/${variant}.png`, x, 50),
         new BackgroundObject(`img/5_background/layers/2_second_layer/${variant}.png`, x, 50),
@@ -54,7 +54,8 @@ function createBackgroundSection(section) {
 function createBottles() {
     const positions = [[280, 500], [380, 500], [450, 400], [580, 400], [700, 400],
         [760, 420], [850, 420], [1050, 420], [1120, 420], [1250, 420],
-        [1420, 420], [1500, 420], [1650, 420], [1850, 420], [1920, 420], [2050, 420]];
+        [1420, 420], [1500, 420], [1650, 420], [1850, 420], [1920, 420], [2050, 420],
+        [2140, 420], [2210, 420]];
     return positions.map(([x, y]) => new Bottle(x, y));
 }
 

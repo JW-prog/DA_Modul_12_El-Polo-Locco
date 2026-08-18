@@ -69,7 +69,7 @@ class WorldEnemyCollision {
         audioManager.stop();
         this.playResultSound(result);
         document.getElementById('pauseButton').classList.add('is-hidden');
-        document.getElementById('restartButton').classList.remove('is-hidden');
+        document.getElementById('resultActions').classList.remove('is-hidden');
     }
 
 

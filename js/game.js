@@ -25,9 +25,17 @@ function isGamePaused() {
 
 /** Initializes the start screen and controls. @returns {void} */
 function initGame() {
-    document.getElementById('startButton').addEventListener('click', startGame, { once: true });
+    armStartButton();
     initTouchControls();
     updateSoundButton();
+}
+
+
+/** Arms the start button for one game start. @returns {void} */
+function armStartButton() {
+    const button = document.getElementById('startButton');
+    button.removeEventListener('click', startGame);
+    button.addEventListener('click', startGame, { once: true });
 }
 
 
@@ -67,7 +75,6 @@ function releaseTouchButton(event, button) {
 async function startGame() {
     showLoadingState();
     createGameWorld();
-    await waitForInitialGameImages();
     await waitForNextFrame();
     showRunningState();
     audioManager.start();
@@ -272,10 +279,51 @@ async function restartGame() {
 }
 
 
+/** Returns to the start screen without reloading the document. @returns {void} */
+function goHome() {
+    if (world) world.dispose();
+    clearGameIntervals();
+    clearGameInput();
+    gamePaused = false;
+    isRestarting = false;
+    audioManager.reset();
+    world = null;
+    resetCanvas();
+    showHomeState();
+    armStartButton();
+}
+
+
+/** Clears the last rendered game frame. @returns {void} */
+function resetCanvas() {
+    if (!canvas) return;
+    const context = canvas.getContext('2d');
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
+/** Restores all start-screen controls. @returns {void} */
+function showHomeState() {
+    document.querySelector('.start-screen-image').classList.remove('is-hidden');
+    const startButton = document.getElementById('startButton');
+    startButton.classList.remove('is-hidden');
+    startButton.disabled = false;
+    startButton.querySelector('.start-button-label').textContent = 'Spiel starten';
+    document.getElementById('startOptions').classList.remove('is-hidden');
+    document.getElementById('fullscreen').classList.remove('game-running');
+    document.getElementById('pauseButton').classList.add('is-hidden');
+    document.getElementById('pauseOverlay').classList.add('is-hidden');
+    document.getElementById('resultActions').classList.add('is-hidden');
+    updatePauseButton();
+    updateSoundButton();
+}
+
+
 /** Restores game controls before a new round. @returns {void} */
 function hideRestartOverlays() {
     document.getElementById('pauseOverlay').classList.add('is-hidden');
-    document.getElementById('restartButton').classList.add('is-hidden');
+    document.getElementById('resultActions').classList.add('is-hidden');
     updatePauseButton();
 }
 

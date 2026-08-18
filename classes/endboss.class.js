@@ -4,10 +4,12 @@ class Endboss extends MovableObject {
     width = 300;
     y = 10;
     health = 100;
-    speed = 0.75;
-    attackCooldown = 1200;
+    speed = 1.5;
+    attackCooldown = 850;
     lastAttack = 0;
     attackEnd = 0;
+    lastBottleHit = 0;
+    bottleHitCooldown = 550;
     animationState = '';
     deathAnimationFinished = false;
     hasSeenCharacter = false;
@@ -151,9 +153,28 @@ class Endboss extends MovableObject {
         if (!this.canMove()) return;
         if (!this.activateOnSight()) return;
         const character = this.world.character;
+        this.updateDifficulty();
         if (this.isTouchingCharacter()) this.attack();
         else if (character.x < this.x) this.moveLeft();
         else this.moveRight();
+    }
+
+
+    /** Increases pressure as the boss loses energy. @returns {void} */
+    updateDifficulty() {
+        if (this.energy <= 35) {
+            this.speed = 3.2;
+            this.attackCooldown = 550;
+        } else if (this.energy <= 70) {
+            this.speed = 2.3;
+            this.attackCooldown = 700;
+        }
+    }
+
+
+    /** Prevents a stationary throw-spam sequence from dealing every hit. @returns {boolean} */
+    canTakeBottleDamage() {
+        return Date.now() - this.lastBottleHit >= this.bottleHitCooldown;
     }
 
 
@@ -265,6 +286,7 @@ class Endboss extends MovableObject {
      * @returns {void}
      */
     hit(damage = 1) {
+        this.lastBottleHit = Date.now();
         super.hit(damage);
         if (this.isDead()) this.startDeathAnimationImmediately();
         else audioManager.playEndbossHitSound();

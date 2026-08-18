@@ -101,7 +101,8 @@ class WorldCollectibles extends WorldEnemyCollision {
      */
     damageEnemyWithBottle(enemy) {
         if (enemy instanceof Endboss) {
-            enemy.hit(15);
+            if (!enemy.canTakeBottleDamage()) return;
+            enemy.hit(20);
             this.statusBarEnemy.setPercentage(enemy.energy);
         } else {
             enemy.hit(enemy.energy);
@@ -242,8 +243,13 @@ class WorldCollectibles extends WorldEnemyCollision {
      */
     checkThrowInput() {
         if (isGamePaused()) return;
-        if (!this.gameOver && this.keyboard.THROW && this.bottlePercentage > 0 &&
-            this.canThrowBottle()) this.throwBottle();
+        if (!this.keyboard.THROW) return;
+        if (this.gameOver || this.bottlePercentage <= 0) {
+            this.keyboard.THROW = false;
+            return;
+        }
+        if (!this.canThrowBottle()) return;
+        this.throwBottle();
         this.keyboard.THROW = false;
     }
 
