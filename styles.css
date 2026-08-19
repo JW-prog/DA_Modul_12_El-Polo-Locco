@@ -414,7 +414,7 @@ h1 {
 }
 
 /* Use the mobile game layout, including its controls, on notebooks as well. */
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px), only screen and (pointer: coarse) and (orientation: landscape) {
     body {
         min-height: 100dvh;
         padding: 0;

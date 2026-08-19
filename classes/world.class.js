@@ -3,9 +3,9 @@ class World extends WorldRenderer {
     level = level1;
     camera_x = 0;
     statusBar = new StatusBar();
-    statusBarEnemy = new StatusBarEnemy();
-    statusBarBottle = new StatusBarBottle();
-    statusBarCoin = new StatusBarCoin();
+    statusBarEnemy = new StatusBar('enemy', 500, 10, 100);
+    statusBarBottle = new StatusBar('bottle', 20, 60, 0);
+    statusBarCoin = new StatusBar('coin', 20, 120, 0);
     collectedCoins = 0;
     bottlePercentage = 0;
     gameOver = false;

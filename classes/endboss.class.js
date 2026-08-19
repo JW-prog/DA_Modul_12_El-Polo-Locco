@@ -6,7 +6,9 @@ class Endboss extends MovableObject {
     health = 100;
     speed = 1.5;
     attackCooldown = 850;
+    jumpCooldown = 2600;
     lastAttack = 0;
+    lastJump = 0;
     attackEnd = 0;
     lastBottleHit = 0;
     bottleHitCooldown = 550;
@@ -154,7 +156,9 @@ class Endboss extends MovableObject {
         if (!this.activateOnSight()) return;
         const character = this.world.character;
         this.updateDifficulty();
+        this.updateJump();
         if (this.isTouchingCharacter()) this.attack();
+        else if (this.canJump(character)) this.jump();
         else if (character.x < this.x) this.moveLeft();
         else this.moveRight();
     }
@@ -163,12 +167,40 @@ class Endboss extends MovableObject {
     /** Increases pressure as the boss loses energy. @returns {void} */
     updateDifficulty() {
         if (this.energy <= 35) {
-            this.speed = 3.2;
-            this.attackCooldown = 550;
+            this.speed = 4.2;
+            this.attackCooldown = 500;
+            this.jumpCooldown = 1800;
         } else if (this.energy <= 70) {
-            this.speed = 2.3;
-            this.attackCooldown = 700;
+            this.speed = 3;
+            this.attackCooldown = 650;
+            this.jumpCooldown = 2200;
         }
+    }
+
+
+    /** Returns whether the boss may start another jump. @param {Character} character - Pepe. @returns {boolean} Jump state. */
+    canJump(character) {
+        return this.y === 10 && Math.abs(character.x - this.x) < 520 &&
+            Date.now() - this.lastJump >= this.jumpCooldown;
+    }
+
+
+    /** Advances the boss jump and keeps it on its ground line. @returns {void} */
+    updateJump() {
+        if (this.y === 10 && this.speedY === 0) return;
+        this.y -= this.speedY / 2;
+        this.speedY -= this.acceleration / 2;
+        if (this.y >= 10) {
+            this.y = 10;
+            this.speedY = 0;
+        }
+    }
+
+
+    /** Starts a boss jump. @returns {void} */
+    jump() {
+        this.lastJump = Date.now();
+        this.speedY = 22;
     }
 
 
