@@ -365,7 +365,7 @@ h1 {
     }
 }
 
-@media only screen and (max-width: 710px) and (orientation: portrait) {
+@media only screen and (max-width: 1024px) and (orientation: portrait) {
     .orientation-warning {
         position: fixed;
         z-index: 1000;
@@ -446,7 +446,7 @@ h1 {
         align-items: flex-end;
         justify-content: space-between;
         gap: 12px;
-        padding: 10px;
+        padding: clamp(10px, 3vw, 26px);
         box-sizing: border-box;
         pointer-events: none;
     }
@@ -457,6 +457,17 @@ h1 {
         gap: 8px;
         flex-wrap: nowrap;
         pointer-events: auto;
+    }
+
+    .game-container.game-running .screen-button {
+        display: none;
+    }
+
+    .result-actions {
+        right: 50%;
+        bottom: 16%;
+        transform: translateX(50%);
+        z-index: 20;
     }
 
     .touch-button {

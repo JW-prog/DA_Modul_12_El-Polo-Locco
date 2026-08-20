@@ -37,6 +37,7 @@ class WorldRenderer extends WorldCollectibles {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.enemyProjectiles);
         this.addToMap(this.character);
         this.ctx.translate(-roundedCameraX, 0);
     }
@@ -135,9 +136,19 @@ class WorldRenderer extends WorldCollectibles {
      * @returns {Object} Width and height.
      */
     getResultImageSize(image) {
-        const scale = Math.min(this.getCanvasWidth() * 0.9 / image.naturalWidth,
-            this.getCanvasHeight() * 0.9 / image.naturalHeight);
+        const maxFraction = this.usesTouchControls() ? 0.65 : 0.9;
+        const scale = Math.min(this.getCanvasWidth() * maxFraction / image.naturalWidth,
+            this.getCanvasHeight() * maxFraction / image.naturalHeight);
         return { width: image.naturalWidth * scale, height: image.naturalHeight * scale };
+    }
+
+    /**
+     * Checks whether the game currently runs with on-screen touch controls.
+     * @returns {boolean} Touch-control state.
+     */
+    usesTouchControls() {
+        return window.matchMedia('(pointer: coarse)').matches ||
+            window.matchMedia('(max-width: 1024px)').matches;
     }
 
 

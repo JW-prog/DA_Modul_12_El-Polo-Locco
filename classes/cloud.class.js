@@ -6,11 +6,13 @@ class Cloud extends MovableObject {
 
     /**
      * Creates and animates a cloud.
+     * @param {number} [x] - Horizontal start position. Random when omitted.
+     * @param {string} [image] - Cloud image path.
      */
-    constructor() {
+    constructor(x, image = 'img/5_background/layers/4_clouds/1.png') {
         super();
-        this.loadImage('img/5_background/layers/4_clouds/1.png');
-        this.x = Math.random() * 500;
+        this.loadImage(image);
+        this.x = x ?? Math.random() * 500;
         this.animate();
     }
 

@@ -5,25 +5,39 @@ let gamePaused = false;
 let gameIntervalIds = [];
 let isRestarting = false;
 
-/** Creates a recurring game timer that can be cleared on restart. @param {Function} callback - Timer callback. @param {number} delay - Delay in milliseconds. @returns {number} Timer ID. */
+/**
+ * Creates a recurring game timer that can be cleared on restart.
+ * @param {Function} callback - Timer callback.
+ * @param {number} delay - Delay in milliseconds.
+ * @returns {number} Timer ID.
+ */
 function registerGameInterval(callback, delay) {
     const id = setInterval(callback, delay);
     gameIntervalIds.push(id);
     return id;
 }
 
-/** Stops every recurring timer belonging to the current game. @returns {void} */
+/**
+ * Stops every recurring timer belonging to the current game.
+ * @returns {void}
+ */
 function clearGameIntervals() {
     gameIntervalIds.forEach((id) => clearInterval(id));
     gameIntervalIds = [];
 }
 
-/** Returns whether gameplay updates are currently paused. @returns {boolean} */
+/**
+ * Returns whether gameplay updates are currently paused.
+ * @returns {boolean}
+ */
 function isGamePaused() {
     return gamePaused;
 }
 
-/** Initializes the start screen and controls. @returns {void} */
+/**
+ * Initializes the start screen and controls.
+ * @returns {void}
+ */
 function initGame() {
     armStartButton();
     initTouchControls();
@@ -31,7 +45,10 @@ function initGame() {
 }
 
 
-/** Arms the start button for one game start. @returns {void} */
+/**
+ * Arms the start button for one game start.
+ * @returns {void}
+ */
 function armStartButton() {
     const button = document.getElementById('startButton');
     button.removeEventListener('click', startGame);
@@ -39,13 +56,20 @@ function armStartButton() {
 }
 
 
-/** Registers pointer listeners for every touch button. @returns {void} */
+/**
+ * Registers pointer listeners for every touch button.
+ * @returns {void}
+ */
 function initTouchControls() {
     document.querySelectorAll('.touch-button').forEach(registerTouchButton);
 }
 
 
-/** Registers all listeners of one touch button. @param {HTMLElement} button - Touch button. @returns {void} */
+/**
+ * Registers all listeners of one touch button.
+ * @param {HTMLElement} button - Touch button.
+ * @returns {void}
+ */
 function registerTouchButton(button) {
     button.addEventListener('pointerdown', (event) => pressTouchButton(event, button));
     button.addEventListener('pointerup', (event) => releaseTouchButton(event, button));
@@ -54,7 +78,12 @@ function registerTouchButton(button) {
 }
 
 
-/** Activates a touch control. @param {PointerEvent} event - Pointer event. @param {HTMLElement} button - Touch button. @returns {void} */
+/**
+ * Activates a touch control.
+ * @param {PointerEvent} event - Pointer event.
+ * @param {HTMLElement} button - Touch button.
+ * @returns {void}
+ */
 function pressTouchButton(event, button) {
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
@@ -63,7 +92,12 @@ function pressTouchButton(event, button) {
 }
 
 
-/** Releases a touch control. @param {PointerEvent} event - Pointer event. @param {HTMLElement} button - Touch button. @returns {void} */
+/**
+ * Releases a touch control.
+ * @param {PointerEvent} event - Pointer event.
+ * @param {HTMLElement} button - Touch button.
+ * @returns {void}
+ */
 function releaseTouchButton(event, button) {
     event.preventDefault();
     button.classList.remove('is-pressed');
@@ -71,7 +105,10 @@ function releaseTouchButton(event, button) {
 }
 
 
-/** Creates and starts the game after its images load. @returns {Promise<void>} */
+/**
+ * Creates and starts the game after its images load.
+ * @returns {Promise<void>}
+ */
 async function startGame() {
     showLoadingState();
     createGameWorld();
@@ -81,7 +118,10 @@ async function startGame() {
 }
 
 
-/** Shows feedback while the game loads. @returns {void} */
+/**
+ * Shows feedback while the game loads.
+ * @returns {void}
+ */
 function showLoadingState() {
     const button = document.getElementById('startButton');
     button.disabled = true;
@@ -89,7 +129,10 @@ function showLoadingState() {
 }
 
 
-/** Initializes canvas, level, and world. @returns {void} */
+/**
+ * Initializes canvas, level, and world.
+ * @returns {void}
+ */
 function createGameWorld() {
     canvas = document.getElementById('gameCanvas');
     configureCanvas(canvas);
@@ -98,7 +141,10 @@ function createGameWorld() {
 }
 
 
-/** Switches the page to its running-game state. @returns {void} */
+/**
+ * Switches the page to its running-game state.
+ * @returns {void}
+ */
 function showRunningState() {
     document.querySelector('.start-screen-image').classList.add('is-hidden');
     document.getElementById('startButton').classList.add('is-hidden');
@@ -109,7 +155,10 @@ function showRunningState() {
 }
 
 
-/** Pauses or resumes the running game. @returns {void} */
+/**
+ * Pauses or resumes the running game.
+ * @returns {void}
+ */
 function togglePause() {
     if (!world || world.gameOver) return;
     gamePaused = !gamePaused;
@@ -121,14 +170,20 @@ function togglePause() {
 }
 
 
-/** Releases all controls so no input remains active after pausing. @returns {void} */
+/**
+ * Releases all controls so no input remains active after pausing.
+ * @returns {void}
+ */
 function clearGameInput() {
     ['LEFT', 'RIGHT', 'UP', 'DOWN', 'SPACE', 'D', 'THROW'].forEach((key) => keyboard[key] = false);
     document.querySelectorAll('.touch-button').forEach((button) => button.classList.remove('is-pressed'));
 }
 
 
-/** Updates icon and accessible text of the pause control. @returns {void} */
+/**
+ * Updates icon and accessible text of the pause control.
+ * @returns {void}
+ */
 function updatePauseButton() {
     const button = document.getElementById('pauseButton');
     const label = gamePaused ? 'Spiel fortsetzen' : 'Spiel pausieren';
@@ -138,14 +193,20 @@ function updatePauseButton() {
 }
 
 
-/** Waits for all initially used game images. @returns {Promise<void[]>} */
+/**
+ * Waits for all initially used game images.
+ * @returns {Promise<void[]>}
+ */
 function waitForInitialGameImages() {
     const images = collectInitialGameImages();
     return Promise.all([...images].map(waitForImage));
 }
 
 
-/** Collects unique images from initial drawable objects. @returns {Set<HTMLImageElement>} */
+/**
+ * Collects unique images from initial drawable objects.
+ * @returns {Set<HTMLImageElement>}
+ */
 function collectInitialGameImages() {
     const images = new Set();
     getInitialDrawableObjects().forEach((object) => collectObjectImages(object, images));
@@ -153,7 +214,10 @@ function collectInitialGameImages() {
 }
 
 
-/** Returns all objects visible when the game starts. @returns {DrawableObject[]} */
+/**
+ * Returns all objects visible when the game starts.
+ * @returns {DrawableObject[]}
+ */
 function getInitialDrawableObjects() {
     return [world.character, world.statusBar, world.statusBarEnemy,
         world.statusBarBottle, world.statusBarCoin, ...world.level.backgroundObjects,
@@ -162,34 +226,55 @@ function getInitialDrawableObjects() {
 }
 
 
-/** Adds one object's images to a set. @param {DrawableObject} object - Source object. @param {Set<HTMLImageElement>} images - Target set. @returns {void} */
+/**
+ * Adds one object's images to a set.
+ * @param {DrawableObject} object - Source object.
+ * @param {Set<HTMLImageElement>} images - Target set.
+ * @returns {void}
+ */
 function collectObjectImages(object, images) {
     if (object.img) images.add(object.img);
     Object.values(object.imageCache || {}).forEach((image) => images.add(image));
 }
 
 
-/** Waits until an image is ready or failed. @param {HTMLImageElement} image - Image. @returns {Promise<void>} */
+/**
+ * Waits until an image is ready or failed.
+ * @param {HTMLImageElement} image - Image.
+ * @returns {Promise<void>}
+ */
 function waitForImage(image) {
     if (image.complete) return Promise.resolve();
     return new Promise((resolve) => registerImageCompletion(image, resolve));
 }
 
 
-/** Registers image completion listeners. @param {HTMLImageElement} image - Image. @param {Function} resolve - Promise resolver. @returns {void} */
+/**
+ * Registers image completion listeners.
+ * @param {HTMLImageElement} image - Image.
+ * @param {Function} resolve - Promise resolver.
+ * @returns {void}
+ */
 function registerImageCompletion(image, resolve) {
     image.addEventListener('load', resolve, { once: true });
     image.addEventListener('error', resolve, { once: true });
 }
 
 
-/** Waits for two animation frames. @returns {Promise<void>} */
+/**
+ * Waits for two animation frames.
+ * @returns {Promise<void>}
+ */
 function waitForNextFrame() {
     return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
 
 
-/** Opens an information overlay. @param {string} overlayId - Overlay element ID. @returns {void} */
+/**
+ * Opens an information overlay.
+ * @param {string} overlayId - Overlay element ID.
+ * @returns {void}
+ */
 function openOverlay(overlayId) {
     const overlay = document.getElementById(overlayId);
     overlay.classList.remove('is-hidden');
@@ -197,27 +282,41 @@ function openOverlay(overlayId) {
 }
 
 
-/** Closes an information overlay. @param {string} overlayId - Overlay element ID. @returns {void} */
+/**
+ * Closes an information overlay.
+ * @param {string} overlayId - Overlay element ID.
+ * @returns {void}
+ */
 function closeOverlay(overlayId) {
     document.getElementById(overlayId).classList.add('is-hidden');
 }
 
 
-/** Closes every overlay when Escape is pressed. @param {KeyboardEvent} event - Key event. @returns {void} */
+/**
+ * Closes every overlay when Escape is pressed.
+ * @param {KeyboardEvent} event - Key event.
+ * @returns {void}
+ */
 function closeOverlaysOnEscape(event) {
     if (event.code !== 'Escape') return;
     document.querySelectorAll('.game-overlay').forEach((overlay) => overlay.classList.add('is-hidden'));
 }
 
 
-/** Toggles all game audio. @returns {void} */
+/**
+ * Toggles all game audio.
+ * @returns {void}
+ */
 function toggleSound() {
     audioManager.toggleMute();
     updateSoundButton();
 }
 
 
-/** Updates the sound button's accessible state. @returns {void} */
+/**
+ * Updates the sound button's accessible state.
+ * @returns {void}
+ */
 function updateSoundButton() {
     const button = document.getElementById('soundButton');
     const label = audioManager.isMuted ? 'Ton einschalten' : 'Ton ausschalten';
@@ -227,7 +326,11 @@ function updateSoundButton() {
 }
 
 
-/** Configures logical and physical canvas dimensions. @param {HTMLCanvasElement} element - Game canvas. @returns {void} */
+/**
+ * Configures logical and physical canvas dimensions.
+ * @param {HTMLCanvasElement} element - Game canvas.
+ * @returns {void}
+ */
 function configureCanvas(element) {
     element.logicalWidth = 720;
     element.logicalHeight = 480;
@@ -237,7 +340,10 @@ function configureCanvas(element) {
 }
 
 
-/** Uses a lighter canvas resolution on touch devices to keep movement smooth. @returns {number} Pixel ratio. */
+/**
+ * Uses a lighter canvas resolution on touch devices to keep movement smooth.
+ * @returns {number} Pixel ratio.
+ */
 function getCanvasPixelRatio() {
     const usesTouchControls = window.matchMedia('(pointer: coarse)').matches ||
         window.matchMedia('(max-width: 1024px)').matches;
@@ -245,7 +351,10 @@ function getCanvasPixelRatio() {
 }
 
 
-/** Opens the game container in browser fullscreen mode. @returns {void} */
+/**
+ * Opens the game container in browser fullscreen mode.
+ * @returns {void}
+ */
 function enterfullScreen() {
     const element = document.getElementById('fullscreen');
     const enter = element.requestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
@@ -253,14 +362,20 @@ function enterfullScreen() {
 }
 
 
-/** Exits browser fullscreen mode. @returns {void} */
+/**
+ * Exits browser fullscreen mode.
+ * @returns {void}
+ */
 function exitFullScreen() {
     const exit = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
     if (exit) exit.call(document);
 }
 
 
-/** Rebuilds and starts the game without reloading the page. @returns {Promise<void>} */
+/**
+ * Rebuilds and starts the game without reloading the page.
+ * @returns {Promise<void>}
+ */
 async function restartGame() {
     if (isRestarting) return;
     isRestarting = true;
@@ -279,7 +394,10 @@ async function restartGame() {
 }
 
 
-/** Returns to the start screen without reloading the document. @returns {void} */
+/**
+ * Returns to the start screen without reloading the document.
+ * @returns {void}
+ */
 function goHome() {
     if (world) world.dispose();
     clearGameIntervals();
@@ -294,7 +412,10 @@ function goHome() {
 }
 
 
-/** Clears the last rendered game frame. @returns {void} */
+/**
+ * Clears the last rendered game frame.
+ * @returns {void}
+ */
 function resetCanvas() {
     if (!canvas) return;
     const context = canvas.getContext('2d');
@@ -303,7 +424,10 @@ function resetCanvas() {
 }
 
 
-/** Restores all start-screen controls. @returns {void} */
+/**
+ * Restores all start-screen controls.
+ * @returns {void}
+ */
 function showHomeState() {
     document.querySelector('.start-screen-image').classList.remove('is-hidden');
     const startButton = document.getElementById('startButton');
@@ -320,7 +444,10 @@ function showHomeState() {
 }
 
 
-/** Restores game controls before a new round. @returns {void} */
+/**
+ * Restores game controls before a new round.
+ * @returns {void}
+ */
 function hideRestartOverlays() {
     document.getElementById('pauseOverlay').classList.add('is-hidden');
     document.getElementById('resultActions').classList.add('is-hidden');
@@ -328,7 +455,11 @@ function hideRestartOverlays() {
 }
 
 
-/** Handles pressed game keys. @param {KeyboardEvent} event - Key event. @returns {void} */
+/**
+ * Handles pressed game keys.
+ * @param {KeyboardEvent} event - Key event.
+ * @returns {void}
+ */
 function handleKeyDown(event) {
     if (gamePaused) return;
     preventGameKeyScrolling(event);
@@ -339,21 +470,33 @@ function handleKeyDown(event) {
 }
 
 
-/** Handles released game keys. @param {KeyboardEvent} event - Key event. @returns {void} */
+/**
+ * Handles released game keys.
+ * @param {KeyboardEvent} event - Key event.
+ * @returns {void}
+ */
 function handleKeyUp(event) {
     const key = mapGameKey(event.code);
     if (key) keyboard[key] = false;
 }
 
 
-/** Maps browser key codes to keyboard properties. @param {string} code - Browser key code. @returns {string|undefined} Game key. */
+/**
+ * Maps browser key codes to keyboard properties.
+ * @param {string} code - Browser key code.
+ * @returns {string|undefined} Game key.
+ */
 function mapGameKey(code) {
     return { ArrowLeft: 'LEFT', ArrowRight: 'RIGHT', ArrowUp: 'UP',
         ArrowDown: 'DOWN', Space: 'SPACE', KeyD: 'D' }[code];
 }
 
 
-/** Prevents page scrolling while game keys are active. @param {KeyboardEvent} event - Key event. @returns {void} */
+/**
+ * Prevents page scrolling while game keys are active.
+ * @param {KeyboardEvent} event - Key event.
+ * @returns {void}
+ */
 function preventGameKeyScrolling(event) {
     const gameKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'];
     if (world && !world.gameOver && gameKeys.includes(event.code)) event.preventDefault();

@@ -13,6 +13,7 @@ class World extends WorldRenderer {
     gameResultStartedAt = 0;
     gameResultImages = {};
     throwableObjects = [];
+    enemyProjectiles = [];
     lastBottleThrow = 0;
     bottleThrowCooldown = 500;
     isDisposed = false;

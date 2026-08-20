@@ -17,10 +17,66 @@ class WorldEnemyCollision {
         this.checkEnemyCollisions();
         this.checkBottleHitsOnEnemies();
         this.checkMissedBottles();
+        this.checkEnemyProjectiles();
         this.checkCollectibleCollisions();
         this.removeEscapedChickens();
         this.checkGameResult();
         this.previousCharacterBottom = this.character.y + this.character.height;
+    }
+
+
+    /**
+     * Resolves thrown eggs hitting Pepe or the ground.
+     * @returns {void}
+     */
+    checkEnemyProjectiles() {
+        for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+            const egg = this.enemyProjectiles[i];
+            if (egg.hasHit) continue;
+            if (this.isCharacterTouchingEgg(egg)) this.resolveEggHit(egg);
+            else if (egg.y + egg.height >= 400) this.removeEnemyProjectile(egg);
+        }
+    }
+
+
+    /**
+     * Checks Pepe's contact hitbox against a thrown egg.
+     * @param {Egg} egg - Thrown egg.
+     * @returns {boolean} Collision state.
+     */
+    isCharacterTouchingEgg(egg) {
+        const player = { left: this.character.x + 30, right: this.character.x + this.character.width - 30,
+            top: this.character.y + 50, bottom: this.character.y + this.character.height - 15 };
+        return player.right > egg.x && player.left < egg.x + egg.width &&
+            player.bottom > egg.y && player.top < egg.y + egg.height;
+    }
+
+
+    /**
+     * Damages Pepe with an egg hit and removes the egg.
+     * @param {Egg} egg - Thrown egg.
+     * @returns {void}
+     */
+    resolveEggHit(egg) {
+        egg.stopFlight();
+        if (this.character.canTakeDamage()) {
+            this.character.hit(10);
+            this.updateCharacterStatusBar();
+            audioManager.playCharacterHitSound();
+        }
+        this.removeEnemyProjectile(egg);
+    }
+
+
+    /**
+     * Removes a thrown egg from the world.
+     * @param {Egg} egg - Thrown egg.
+     * @returns {void}
+     */
+    removeEnemyProjectile(egg) {
+        egg.stopFlight();
+        const index = this.enemyProjectiles.indexOf(egg);
+        if (index >= 0) this.enemyProjectiles.splice(index, 1);
     }
 
 

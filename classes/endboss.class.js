@@ -4,14 +4,16 @@ class Endboss extends MovableObject {
     width = 300;
     y = 10;
     health = 100;
-    speed = 1.5;
-    attackCooldown = 850;
-    jumpCooldown = 2600;
+    speed = 2;
+    attackCooldown = 700;
+    jumpCooldown = 2200;
     lastAttack = 0;
     lastJump = 0;
     attackEnd = 0;
     lastBottleHit = 0;
     bottleHitCooldown = 550;
+    lastEggThrow = 0;
+    eggThrowCooldown = 2800;
     animationState = '';
     deathAnimationFinished = false;
     hasSeenCharacter = false;
@@ -157,6 +159,7 @@ class Endboss extends MovableObject {
         const character = this.world.character;
         this.updateDifficulty();
         this.updateJump();
+        this.maybeThrowEgg(character);
         if (this.isTouchingCharacter()) this.attack();
         else if (this.canJump(character)) this.jump();
         else if (character.x < this.x) this.moveLeft();
@@ -164,28 +167,54 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Increases pressure as the boss loses energy. @returns {void} */
+    /**
+     * Increases pressure as the boss loses energy.
+     * @returns {void}
+     */
     updateDifficulty() {
         if (this.energy <= 35) {
-            this.speed = 4.2;
-            this.attackCooldown = 500;
-            this.jumpCooldown = 1800;
+            this.speed = 5;
+            this.attackCooldown = 450;
+            this.jumpCooldown = 1500;
+            this.eggThrowCooldown = 1400;
         } else if (this.energy <= 70) {
-            this.speed = 3;
-            this.attackCooldown = 650;
-            this.jumpCooldown = 2200;
+            this.speed = 3.5;
+            this.attackCooldown = 600;
+            this.jumpCooldown = 1900;
+            this.eggThrowCooldown = 2000;
         }
     }
 
 
-    /** Returns whether the boss may start another jump. @param {Character} character - Pepe. @returns {boolean} Jump state. */
+    /**
+     * Throws an egg toward Pepe when in range and off cooldown.
+     * @param {Character} character - Pepe.
+     * @returns {void}
+     */
+    maybeThrowEgg(character) {
+        const now = Date.now();
+        const distance = Math.abs(character.x - this.x);
+        if (now - this.lastEggThrow < this.eggThrowCooldown || distance < 120 || distance > 900) return;
+        this.lastEggThrow = now;
+        this.world.enemyProjectiles.push(new Egg(this.x + this.width / 2, this.y + 150, character.x));
+    }
+
+
+    /**
+     * Returns whether the boss may start another jump.
+     * @param {Character} character - Pepe.
+     * @returns {boolean} Jump state.
+     */
     canJump(character) {
         return this.y === 10 && Math.abs(character.x - this.x) < 520 &&
             Date.now() - this.lastJump >= this.jumpCooldown;
     }
 
 
-    /** Advances the boss jump and keeps it on its ground line. @returns {void} */
+    /**
+     * Advances the boss jump and keeps it on its ground line.
+     * @returns {void}
+     */
     updateJump() {
         if (this.y === 10 && this.speedY === 0) return;
         this.y -= this.speedY / 2;
@@ -197,14 +226,20 @@ class Endboss extends MovableObject {
     }
 
 
-    /** Starts a boss jump. @returns {void} */
+    /**
+     * Starts a boss jump.
+     * @returns {void}
+     */
     jump() {
         this.lastJump = Date.now();
         this.speedY = 22;
     }
 
 
-    /** Prevents a stationary throw-spam sequence from dealing every hit. @returns {boolean} */
+    /**
+     * Prevents a stationary throw-spam sequence from dealing every hit.
+     * @returns {boolean}
+     */
     canTakeBottleDamage() {
         return Date.now() - this.lastBottleHit >= this.bottleHitCooldown;
     }

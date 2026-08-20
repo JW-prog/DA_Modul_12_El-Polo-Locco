@@ -1,23 +1,29 @@
 let level1;
 
-/** Creates coins arranged as an arc. @param {number} startX - First X position. @param {number} baseY - Baseline. @param {number} count - Coin count. @param {number} spacing - Horizontal spacing. @param {number} arcHeight - Arc height. @returns {Coin[]} Coins. */
-function createCoinArc(startX, baseY, count = 5, spacing = 60, arcHeight = 130) {
-    return Array.from({ length: count }, (_, index) => {
-        const progress = index / (count - 1);
-        const y = baseY - 4 * arcHeight * progress * (1 - progress);
-        return new Coin(startX + index * spacing, y);
-    });
-}
-
-
-/** Initializes the first level. @returns {void} */
+/**
+ * Initializes the first level.
+ * @returns {void}
+ */
 function initLevel1() {
-    level1 = new Level(createEnemies(), [new Cloud()], createBackgrounds(),
+    level1 = new Level(createEnemies(), createClouds(), createBackgrounds(),
         createBottles(), createCoins());
 }
 
 
-/** Creates all level enemies. @returns {MovableObject[]} Enemies. */
+/**
+ * Creates several clouds spread across the level.
+ * @returns {Cloud[]} Clouds.
+ */
+function createClouds() {
+    return [[100, '1.png'], [650, '2.png'], [1200, '1.png'], [1650, '2.png'], [2050, '1.png']]
+        .map(([x, file]) => new Cloud(x, `img/5_background/layers/4_clouds/${file}`));
+}
+
+
+/**
+ * Creates all level enemies.
+ * @returns {MovableObject[]} Enemies.
+ */
 function createEnemies() {
     const enemies = [];
     [680, 760, 840, 1280, 1360, 1440, 1850, 1930, 2010]
@@ -29,7 +35,10 @@ function createEnemies() {
 }
 
 
-/** Creates all scrolling background layers. @returns {BackgroundObject[]} Backgrounds. */
+/**
+ * Creates all scrolling background layers.
+ * @returns {BackgroundObject[]} Backgrounds.
+ */
 function createBackgrounds() {
     const backgrounds = [];
     for (let section = 0; section < 4; section++) {
@@ -39,7 +48,11 @@ function createBackgrounds() {
 }
 
 
-/** Creates one background section. @param {number} section - Section index. @returns {BackgroundObject[]} Layers. */
+/**
+ * Creates one background section.
+ * @param {number} section - Section index.
+ * @returns {BackgroundObject[]} Layers.
+ */
 function createBackgroundSection(section) {
     const variant = section % 2 + 1;
     const x = 720 * section;
@@ -50,7 +63,10 @@ function createBackgroundSection(section) {
 }
 
 
-/** Creates all collectible bottles. @returns {Bottle[]} Bottles. */
+/**
+ * Creates all collectible bottles.
+ * @returns {Bottle[]} Bottles.
+ */
 function createBottles() {
     const positions = [[280, 500], [380, 500], [450, 400], [580, 400], [700, 400],
         [760, 420], [850, 420], [1050, 420], [1120, 420], [1250, 420],
@@ -60,11 +76,11 @@ function createBottles() {
 }
 
 
-/** Creates all collectible coin arcs. @returns {Coin[]} Coins. */
+/**
+ * Creates all collectible coins. One coin equals one status-bar step.
+ * @returns {Coin[]} Coins.
+ */
 function createCoins() {
-    return [...createCoinArc(400, 330, 5, 60, 130),
-        ...createCoinArc(650, 310, 5, 60, 110),
-        ...createCoinArc(1060, 340, 5, 60, 150),
-        ...createCoinArc(1470, 310, 5, 60, 110),
-        ...createCoinArc(1850, 340, 5, 60, 140)];
+    return [[430, 320], [700, 280], [1080, 330], [1490, 280], [1870, 320]]
+        .map(([x, y]) => new Coin(x, y));
 }

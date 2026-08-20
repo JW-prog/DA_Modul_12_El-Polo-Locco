@@ -49,7 +49,12 @@ class StatusBar extends DrawableObject {
         this.img = this.imageCache[this.images[this.resolveImageIndex()]];
     }
 
-    /** Updates the collected coin progress. @param {number} collected - Collected coins. @param {number} total - Total coins. @returns {void} */
+    /**
+     * Updates the collected coin progress.
+     * @param {number} collected - Collected coins.
+     * @param {number} total - Total coins.
+     * @returns {void}
+     */
     setProgress(collected, total) {
         this.collectedCoins = collected;
         this.totalCoins = total;

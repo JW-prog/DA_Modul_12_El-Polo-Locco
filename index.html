@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El pollo Loco</title>
+    <title>El Pollo Loco</title>
     <link rel="icon" type="image/png" href="img/7_statusbars/3_icons/icon_coin.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +17,7 @@
     <script src="classes/character.class.js"></script>
     <script src="classes/chicken.class.js"></script>
     <script src="classes/chicken_small.class.js"></script>
+    <script src="classes/egg.class.js"></script>
     <script src="classes/endboss.class.js"></script>
     <script src="classes/cloud.class.js"></script>
     <script src="classes/bottles.class.js"></script>
@@ -34,7 +35,7 @@
 </head>
 <body onload="initGame()">
     
-    <h1>El pollo Loco</h1>
+    <h1>El Pollo Loco</h1>
 
     <div id="fullscreen" class="game-container">
         <div class="orientation-warning" role="status" aria-live="polite">
@@ -49,8 +50,8 @@
         <div id="startOptions" class="start-options" aria-label="Spieloptionen">
             <button class="menu-icon-button" type="button" onclick="openOverlay('controlsOverlay')" aria-label="Steuerung anzeigen" title="Steuerung">
                 <svg viewBox="0 0 32 32" aria-hidden="true">
-                    <path d="M16 4v12M11 9h10M16 16c-6 0-10 3-10 8v3h20v-3c0-5-4-8-10-8Z" />
-                    <circle cx="11" cy="22" r="1.5" /><circle cx="21" cy="22" r="1.5" />
+                    <rect x="4" y="10" width="24" height="14" rx="2" />
+                    <path d="M8 15h2M12 15h2M16 15h2M20 15h2M8 19h12" />
                 </svg>
             </button>
             <button class="menu-icon-button" type="button" onclick="openOverlay('gameInfoOverlay')" aria-label="Spielerklärung anzeigen" title="Spielerklärung">
