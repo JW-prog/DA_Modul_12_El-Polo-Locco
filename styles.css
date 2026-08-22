@@ -451,6 +451,10 @@ h1 {
         pointer-events: none;
     }
 
+    .game-container.game-running.game-finished .touch-controls {
+        display: none;
+    }
+
     .touch-control-group {
         display: flex;
         align-items: center;
@@ -555,10 +559,12 @@ h1 {
 .result-actions {
     position: absolute;
     z-index: 15;
-    right: 20px;
-    bottom: 20px;
+    left: 50%;
+    right: auto;
+    bottom: 6%;
     display: flex;
     gap: 12px;
+    transform: translateX(-50%);
 }
 
 .result-actions.is-hidden {

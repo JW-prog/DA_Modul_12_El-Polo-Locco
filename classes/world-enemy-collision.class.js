@@ -124,8 +124,7 @@ class WorldEnemyCollision {
         this.setGameResult(result);
         audioManager.stop();
         this.playResultSound(result);
-        document.getElementById('pauseButton').classList.add('is-hidden');
-        document.getElementById('resultActions').classList.remove('is-hidden');
+        showFinishedState();
     }
 
 

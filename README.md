@@ -4,6 +4,23 @@ Ein 2D-Jump'n'Run-Browserspiel, umgesetzt mit purem JavaScript und der Canvas-AP
 
 ![El Pollo Loco Startbildschirm](img/9_intro_outro_screens/start/startscreen_1.png)
 
+## Installation
+
+1. Repository klonen:
+
+   ```bash
+   git clone https://github.com/JW-prog/DA_Modul_12_El-Polo-Locco.git
+   ```
+
+2. In den Projektordner wechseln:
+
+   ```bash
+   cd DA_Modul_12_El-Polo-Locco
+   ```
+
+3. Den Ordner in Visual Studio Code öffnen und `index.html` über die Erweiterung
+   **Live Server** mit **Open with Live Server** starten.
+
 ## Features
 
 - Charakteranimationen für Laufen, Springen, Verletzt-Sein und Sterben
@@ -36,16 +53,6 @@ js/                   Spiellogik, Level-Aufbau, Audio-Manager
 img/                  Sprites, Hintergründe und UI-Grafiken
 audio/                Sound- und Musikdateien
 ```
-
-## Lokal starten
-
-Da das Spiel ausschließlich aus statischen Dateien besteht, reicht ein lokaler Webserver, z. B.:
-
-```bash
-npx serve .
-```
-
-Anschließend im Browser `http://localhost:3000` (oder den ausgegebenen Port) öffnen.
 
 ## Technologien
 

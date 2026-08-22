@@ -149,9 +149,23 @@ function showRunningState() {
     document.querySelector('.start-screen-image').classList.add('is-hidden');
     document.getElementById('startButton').classList.add('is-hidden');
     document.getElementById('startOptions').classList.add('is-hidden');
-    document.getElementById('fullscreen').classList.add('game-running');
+    const gameContainer = document.getElementById('fullscreen');
+    gameContainer.classList.add('game-running');
+    gameContainer.classList.remove('game-finished');
     document.getElementById('pauseButton').classList.remove('is-hidden');
     updateSoundButton();
+}
+
+
+/**
+ * Switches the page to its finished-game state.
+ * @returns {void}
+ */
+function showFinishedState() {
+    clearGameInput();
+    document.getElementById('fullscreen').classList.add('game-finished');
+    document.getElementById('pauseButton').classList.add('is-hidden');
+    document.getElementById('resultActions').classList.remove('is-hidden');
 }
 
 
@@ -435,7 +449,8 @@ function showHomeState() {
     startButton.disabled = false;
     startButton.querySelector('.start-button-label').textContent = 'Spiel starten';
     document.getElementById('startOptions').classList.remove('is-hidden');
-    document.getElementById('fullscreen').classList.remove('game-running');
+    const gameContainer = document.getElementById('fullscreen');
+    gameContainer.classList.remove('game-running', 'game-finished');
     document.getElementById('pauseButton').classList.add('is-hidden');
     document.getElementById('pauseOverlay').classList.add('is-hidden');
     document.getElementById('resultActions').classList.add('is-hidden');
